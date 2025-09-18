@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Базы данных
+  db-credits:
+    image: postgres:17-alpine
+    container_name: credits-db
+    environment:
+      - POSTGRES_USER=${CREDITS_DB_USER}
+      - POSTGRES_PASSWORD=${CREDITS_DB_PASSWORD}
+      - POSTGRES_DB=${CREDITS_DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - credits_data:/var/lib/postgresql/data
+  db-clients:
+    image: postgres:17-alpine
+    container_name: clients-db
+    environment:
+      - POSTGRES_USER=${CLIENTS_DB_USER}
+      - POSTGRES_PASSWORD=${CLIENTS_DB_PASSWORD}
+      - POSTGRES_DB=${CLIENTS_DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - clients_data:/var/lib/postgresql/data
+  db-accounts:
+    image: postgres:17-alpine
+    container_name: accounts-db
+    environment:
+      - POSTGRES_USER=${ACCOUNTS_DB_USER}
+      - POSTGRES_PASSWORD=${ACCOUNTS_DB_PASSWORD}
+      - POSTGRES_DB=${ACCOUNTS_DB_NAME}
+    ports:
+      - "5434:5432"
+    volumes:
+      - accounts_data:/var/lib/postgresql/data
+
+  # Сервисы
+  credit-processing-service:
+    build:
+      context: ./credit-processing-ms
+    container_name: credit-processing-ms
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-credits:5432/${CREDITS_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${CREDITS_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${CREDITS_DB_PASSWORD}
+    depends_on:
+      - db-credits
+
+  client-processing-service:
+    build:
+      context: ./client-processing-ms
+    container_name: client-processing-ms
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-clients:5432/${CLIENTS_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${CLIENTS_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${CLIENTS_DB_PASSWORD}
+    depends_on:
+      - db-clients
+
+  account-processing-service:
+    build:
+      context: ./account-processing-ms
+    container_name: account-processing-ms
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-clients:5432/${ACCOUNTS_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${ACCOUNTS_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${ACCOUNTS_DB_PASSWORD}
+    depends_on:
+      - db-accounts
+
+volumes:
+  credits_data:
+  clients_data:
