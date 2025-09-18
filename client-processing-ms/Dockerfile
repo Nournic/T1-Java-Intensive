@@ -4,18 +4,20 @@ FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /app
 
 COPY pom.xml .
-RUN mvn dependency:go-offline
+COPY client-processing-ms/pom.xml ./client-processing-ms/
+COPY credit-processing-ms/pom.xml ./credit-processing-ms/
+COPY account-processing-ms/pom.xml ./account-processing-ms/
 
-COPY src ./src
+COPY . .
 
-RUN mvn package -DskipTests
+RUN mvn clean install -B -DskipTests
 
 # Этап 2: Сборка легковесного образа
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/target/client-processing-ms-1.0-SNAPSHOT.jar app.jar
+COPY --from=builder /app/client-processing-ms/target/client-processing-ms-1.0-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 

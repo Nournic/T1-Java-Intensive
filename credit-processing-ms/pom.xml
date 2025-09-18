@@ -18,6 +18,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
+    <java.version>21</java.version>
   </properties>
 
   <dependencyManagement>
@@ -95,5 +96,22 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>ru.t1.nour.microservice.App</mainClass> <!-- ЗАМЕНИТЕ НА ВАШ ПУТЬ -->
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>

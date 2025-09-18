@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Базы данных
   db-credits:
-    image: postgres:17-alpine
+    image: postgres:15-alpine
     container_name: credits-db
     environment:
       - POSTGRES_USER=${CREDITS_DB_USER}
@@ -14,7 +14,7 @@ services:
     volumes:
       - credits_data:/var/lib/postgresql/data
   db-clients:
-    image: postgres:17-alpine
+    image: postgres:15-alpine
     container_name: clients-db
     environment:
       - POSTGRES_USER=${CLIENTS_DB_USER}
@@ -25,7 +25,7 @@ services:
     volumes:
       - clients_data:/var/lib/postgresql/data
   db-accounts:
-    image: postgres:17-alpine
+    image: postgres:15-alpine
     container_name: accounts-db
     environment:
       - POSTGRES_USER=${ACCOUNTS_DB_USER}
@@ -39,7 +39,8 @@ services:
   # Сервисы
   credit-processing-service:
     build:
-      context: ./credit-processing-ms
+      context: .
+      dockerfile: ./credit-processing-ms/Dockerfile
     container_name: credit-processing-ms
     ports:
       - "8080:8080"
@@ -52,7 +53,8 @@ services:
 
   client-processing-service:
     build:
-      context: ./client-processing-ms
+      context: .
+      dockerfile: ./client-processing-ms/Dockerfile
     container_name: client-processing-ms
     ports:
       - "8081:8080"
@@ -65,12 +67,13 @@ services:
 
   account-processing-service:
     build:
-      context: ./account-processing-ms
+      context: .
+      dockerfile: ./account-processing-ms/Dockerfile
     container_name: account-processing-ms
     ports:
       - "8082:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-clients:5432/${ACCOUNTS_DB_NAME}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-accounts:5432/${ACCOUNTS_DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${ACCOUNTS_DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${ACCOUNTS_DB_PASSWORD}
     depends_on:
@@ -79,3 +82,4 @@ services:
 volumes:
   credits_data:
   clients_data:
+  accounts_data:
