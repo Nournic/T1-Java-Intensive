@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1758397795618-1" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="client_product_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758397795618-2" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="client_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758397795618-3" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="product_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758397795618-4" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="user_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758397795618-5" author="diman (generated)">
+        <createTable tableName="clients">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_client"/>
+            </column>
+            <column name="client_id" type="VARCHAR(255)"/>
+            <column name="user_id" type="BIGINT"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="middle_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="date_of_birth" type="DATE"/>
+            <column name="document_type" type="VARCHAR(255)"/>
+            <column name="document_id" type="BIGINT"/>
+            <column name="document_prefix" type="VARCHAR(255)"/>
+            <column name="document_suffix" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758397795618-6" author="diman (generated)">
+        <createTable tableName="client_products">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_client_product"/>
+            </column>
+            <column name="product_id" type="BIGINT"/>
+            <column name="client_id" type="BIGINT"/>
+            <column name="open_date" type="DATETIME"/>
+            <column name="close_date" type="DATETIME"/>
+            <column name="status" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758397795618-7" author="diman (generated)">
+        <createTable tableName="products">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_product"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="key" type="VARCHAR(255)"/>
+            <column name="create_date" type="DATETIME"/>
+            <column name="product_id" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="client_products_seq" startValue="1" incrementBy="50"/>
+        <createSequence sequenceName="clients_seq" startValue="1" incrementBy="50"/>
+        <createSequence sequenceName="products_seq" startValue="1" incrementBy="50"/>
+        <createSequence sequenceName="users_seq" startValue="1" incrementBy="50"/>
+    </changeSet>
+    <changeSet id="1758397795618-8" author="diman (generated)">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+            </column>
+            <column name="login" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(50)"/>
+            <column name="password" type="VARCHAR(120)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
