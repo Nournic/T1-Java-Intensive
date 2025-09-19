@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1758529926366-1" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="payment_registries_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529926366-2" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="product_registries_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529926366-3" author="diman (generated)">
+        <createTable tableName="payment_registries">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_payment_registries"/>
+            </column>
+            <column name="payment_date" type="DATETIME"/>
+            <column name="amount" type="DECIMAL(19, 2)"/>
+            <column name="interest_rate_amount" type="DECIMAL(19, 2)"/>
+            <column name="debt_amount" type="DECIMAL(19, 2)"/>
+            <column name="expired" type="BOOLEAN"/>
+            <column name="payment_expiration_date" type="DATETIME"/>
+            <column name="product_registry_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529926366-4" author="diman (generated)">
+        <createTable tableName="product_registries">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_product_registries"/>
+            </column>
+            <column name="account_id" type="BIGINT"/>
+            <column name="client_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="interest_rate" type="DECIMAL(19, 2)"/>
+            <column name="open_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529926366-5" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="product_registry_id" baseTableName="payment_registries"
+                                 constraintName="FK_PAYMENT_REGISTRIES_ON_PRODUCT_REGISTRY" referencedColumnNames="id"
+                                 referencedTableName="product_registries"/>
+    </changeSet>
+</databaseChangeLog>
