@@ -49,6 +49,12 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>1.6.0</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 
   <build>
@@ -109,6 +115,20 @@
         </executions>
         <configuration>
           <mainClass>ru.t1.nour.microservice.App</mainClass> <!-- ЗАМЕНИТЕ НА ВАШ ПУТЬ -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>1.6.0</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
     </plugins>
