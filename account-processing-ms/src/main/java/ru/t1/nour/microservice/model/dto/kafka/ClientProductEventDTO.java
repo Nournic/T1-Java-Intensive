@@ -15,6 +15,6 @@ public class ClientProductEventDTO {
     private String productKey;
     private String status;
     private BigDecimal requestedAmount;
-    private Long monthCount;
+    private Integer monthCount;
     private String eventType;
 }

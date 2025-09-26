@@ -19,5 +19,5 @@ public class ClientProductCreateRequest {
     BigDecimal requestedAmount;
 
     @Min(1)
-    Long monthCount;
+    Integer monthCount;
 }
