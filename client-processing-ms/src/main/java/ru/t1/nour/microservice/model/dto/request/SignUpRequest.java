@@ -1,4 +1,4 @@
-package ru.t1.nour.microservice.model.dto;
+package ru.t1.nour.microservice.model.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

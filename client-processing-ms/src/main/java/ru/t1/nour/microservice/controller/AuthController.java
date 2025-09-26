@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.t1.nour.microservice.model.dto.LoginRequest;
-import ru.t1.nour.microservice.model.dto.MessageResponse;
-import ru.t1.nour.microservice.model.dto.SignUpRequest;
+import ru.t1.nour.microservice.model.dto.request.LoginRequest;
+import ru.t1.nour.microservice.model.dto.response.MessageResponse;
+import ru.t1.nour.microservice.model.dto.request.SignUpRequest;
 import ru.t1.nour.microservice.service.impl.UserService;
 
 @RestController
@@ -18,6 +18,7 @@ import ru.t1.nour.microservice.service.impl.UserService;
 public class AuthController {
     private final UserService userService;
 
+    @PostMapping("/login")
     public ResponseEntity<?> authorize(@Valid @RequestBody LoginRequest loginRequest){
         return userService.authorize(loginRequest);
     }

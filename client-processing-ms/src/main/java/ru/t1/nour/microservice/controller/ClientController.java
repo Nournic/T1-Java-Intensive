@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.t1.nour.microservice.model.dto.RegistrationRequest;
 import ru.t1.nour.microservice.model.dto.UserDto;
+import ru.t1.nour.microservice.model.dto.request.ClientRegistrationRequest;
 import ru.t1.nour.microservice.service.ClientService;
 
 @RestController
@@ -19,8 +19,8 @@ import ru.t1.nour.microservice.service.ClientService;
 public class ClientController {
     private final ClientService clientService;
 
-    @PostMapping("/register")
-    public ResponseEntity<UserDto> registerClient(@Valid @RequestBody RegistrationRequest clientRequest) {
+    @PostMapping("/client")
+    public ResponseEntity<UserDto> registerClient(@Valid @RequestBody ClientRegistrationRequest clientRequest) {
         UserDto resultClient = clientService.registerClient(clientRequest);
         return ResponseEntity.ok().body(resultClient);
     }

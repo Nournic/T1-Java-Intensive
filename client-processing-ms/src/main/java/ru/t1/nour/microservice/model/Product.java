@@ -29,4 +29,10 @@ public class Product extends AbstractPersistable<Long> {
 
     @Column(name = "product_id")
     private String productId;
+
+    @PostPersist
+    public void generateProductId(){
+        if(this.productId == null)
+            this.productId = this.key.toString() + this.getId();
+    }
 }

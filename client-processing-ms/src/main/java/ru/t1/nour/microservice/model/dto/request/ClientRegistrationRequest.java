@@ -1,28 +1,21 @@
-package ru.t1.nour.microservice.model.dto;
+package ru.t1.nour.microservice.model.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.t1.nour.microservice.model.enums.DocumentType;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class RegistrationRequest {
+@Data
+public class ClientRegistrationRequest {
     @NotBlank
-    @Size(min = 3, max = 50)
+    @Size(min = 8, max = 100)
     private String login;
-
     @NotBlank
-    @Size(min=8, max = 100)
+    @Size(min = 8, max = 100)
     private String password;
 
     @NotBlank
@@ -31,9 +24,7 @@ public class RegistrationRequest {
 
     @NotBlank
     private String firstName;
-
     private String middleName;
-
     @NotBlank
     private String lastName;
 

@@ -9,8 +9,7 @@ import ru.t1.nour.microservice.mapper.ClientMapper;
 import ru.t1.nour.microservice.model.Client;
 import ru.t1.nour.microservice.model.Role;
 import ru.t1.nour.microservice.model.User;
-import ru.t1.nour.microservice.model.dto.ClientDto;
-import ru.t1.nour.microservice.model.dto.RegistrationRequest;
+import ru.t1.nour.microservice.model.dto.request.ClientRegistrationRequest;
 import ru.t1.nour.microservice.model.dto.UserDto;
 import ru.t1.nour.microservice.model.enums.RoleEnum;
 import ru.t1.nour.microservice.repository.BlacklistRegistryRepository;
@@ -40,21 +39,22 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public UserDto registerClient(RegistrationRequest request) {
+    public UserDto registerClient(ClientRegistrationRequest request) {
         if(blacklistRegistryRepository.isCurrentlyBlacklisted(
                 request.getDocumentType(),
                 request.getDocumentId(),
                 LocalDateTime.now()))
             throw new RuntimeException("Client is blocked in system");
 
-        if(clientRepository.existsByDocumentTypeAndDocumentId(request.getDocumentType(),
+        if(clientRepository.existsByDocumentTypeAndDocumentId(
+                request.getDocumentType(),
                 request.getDocumentId()))
             throw new RuntimeException("Client is already exists");
 
         if(userRepository.existsByLogin(request.getLogin()))
             throw new RuntimeException("Login is already taken!");
 
-        if(userRepository.existsByEmail("Email is already taken!"))
+        if(userRepository.existsByEmail(request.getEmail()))
             throw new RuntimeException("Login is already taken!");
 
         Client newClient = Client.builder()

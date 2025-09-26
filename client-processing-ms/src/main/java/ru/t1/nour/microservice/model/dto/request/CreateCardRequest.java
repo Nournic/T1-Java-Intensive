@@ -1,4 +1,4 @@
-package ru.t1.nour.microservice.model.dto;
+package ru.t1.nour.microservice.model.dto.request;
 
 import ru.t1.nour.microservice.model.enums.Key;
 

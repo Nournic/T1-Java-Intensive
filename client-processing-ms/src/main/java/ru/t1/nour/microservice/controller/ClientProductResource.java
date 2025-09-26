@@ -1,22 +1,22 @@
 package ru.t1.nour.microservice.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.t1.nour.microservice.model.ClientProduct;
+import ru.t1.nour.microservice.model.dto.request.ClientProductCreateRequest;
+import ru.t1.nour.microservice.model.dto.request.ClientProductUpdateRequest;
+import ru.t1.nour.microservice.model.dto.response.ClientProductResponse;
+import ru.t1.nour.microservice.model.dto.response.MessageResponse;
 import ru.t1.nour.microservice.repository.ClientProductRepository;
-import ru.t1.nour.microservice.service.impl.ClientProductService;
-import ru.t1.nour.microservice.service.impl.kafka.ProductEventProducer;
+import ru.t1.nour.microservice.service.ClientProductService;
 
-import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,64 +31,37 @@ public class ClientProductResource {
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    public PagedModel<ClientProduct> getAll(Pageable pageable) {
-        Page<ClientProduct> clientProducts = clientProductRepository.findAll(pageable);
+    public PagedModel<ClientProductResponse> getAll(Pageable pageable) {
+        Page<ClientProductResponse> clientProducts = clientProductService.findAll(pageable);
         return new PagedModel<>(clientProducts);
     }
 
     @GetMapping("/{id}")
-    public ClientProduct getOne(@PathVariable Long id) {
-        Optional<ClientProduct> clientProductOptional = clientProductRepository.findById(id);
-        return clientProductOptional.orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id)));
-    }
-
-    @GetMapping("/by-ids")
-    public List<ClientProduct> getMany(@RequestParam List<Long> ids) {
-        return clientProductRepository.findAllById(ids);
+    public ResponseEntity<ClientProductResponse> get(@PathVariable Long id) {
+        return ResponseEntity
+                .ok()
+                .body(clientProductService.findById(id));
     }
 
     @PostMapping
-    public ClientProduct create(@RequestBody ClientProduct clientProduct) {
-        return clientProductService.create(clientProduct);
+    public ResponseEntity<ClientProductResponse> create(@RequestBody ClientProductCreateRequest request) {
+        return ResponseEntity
+                .ok()
+                .body(clientProductService.create(request));
     }
 
-    @PatchMapping("/{id}")
-    public ClientProduct patch(@PathVariable Long id, @RequestBody JsonNode patchNode) throws IOException {
-        ClientProduct clientProduct = clientProductRepository.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id)));
-
-        objectMapper.readerForUpdating(clientProduct).readValue(patchNode);
-
-        return clientProductRepository.save(clientProduct);
-    }
-
-    @PatchMapping
-    public List<Long> patchMany(@RequestParam List<Long> ids, @RequestBody JsonNode patchNode) throws IOException {
-        Collection<ClientProduct> clientProducts = clientProductRepository.findAllById(ids);
-
-        for (ClientProduct clientProduct : clientProducts) {
-            objectMapper.readerForUpdating(clientProduct).readValue(patchNode);
-        }
-
-        List<ClientProduct> resultClientProducts = clientProductRepository.saveAll(clientProducts);
-        return resultClientProducts.stream()
-                .map(ClientProduct::getId)
-                .toList();
+    @PutMapping("/{id}")
+    public ResponseEntity<ClientProductResponse> update(@PathVariable Long id, @RequestBody ClientProductUpdateRequest request) {
+        return ResponseEntity
+                .ok()
+                .body(clientProductService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ClientProduct delete(@PathVariable Long id) {
-        return clientProductService.delete(id);
-    }
-
-    @DeleteMapping
-    public void deleteMany(@RequestParam List<Long> ids) {
-        clientProductRepository.deleteAllById(ids);
-    }
-
-    @PutMapping
-    public ClientProduct update(@RequestBody ClientProduct clientProduct) {
-        return clientProductService.update(clientProduct);
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        clientProductService.delete(id);
+        return ResponseEntity
+                .ok()
+                .body(new MessageResponse("Client Product with ID " + id + "was successfully deleted."));
     }
 }
