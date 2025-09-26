@@ -11,7 +11,7 @@ public enum ProductKey {
     INS("INS"),
     BS("BS");
 
-    private String name;
+    private final String name;
 
     ProductKey(String name) {
         this.name = name;

@@ -8,6 +8,7 @@ import ru.t1.nour.microservice.model.dto.ClientInfoResponse;
 import ru.t1.nour.microservice.model.dto.kafka.ClientProductEventDTO;
 import ru.t1.nour.microservice.repository.PaymentRegistryRepository;
 import ru.t1.nour.microservice.repository.ProductRegistryRepository;
+import ru.t1.nour.microservice.service.PaymentRegistryService;
 import ru.t1.nour.microservice.service.ProductRegistryService;
 import ru.t1.nour.microservice.web.ClientApiFacade;
 
@@ -21,6 +22,8 @@ public class ProductRegistryServiceImpl implements ProductRegistryService {
     private final ProductRegistryRepository productRegistryRepository;
 
     private final PaymentRegistryRepository paymentRegistryRepository;
+
+    private final PaymentRegistryService paymentRegistryService;
 
     private final ClientApiFacade clientApiFacade;
 
@@ -66,9 +69,9 @@ public class ProductRegistryServiceImpl implements ProductRegistryService {
         productRegistry.setOpenDate(LocalDateTime.now());
         productRegistry.setInterestRate(DEFAULT_INTEREST_RATE);
         productRegistry.setMonthCount(event.getMonthCount());
-        // ... ваша логика создания ProductRegistry и PaymentRegistry ...
-        // ВАЖНО: При создании графика платежей для нового кредита,
-        // СУММА всех `debtAmount` в новом графике должна быть равна
-        // `event.getRequestedAmount()`.
+
+        ProductRegistry savedProductRegistry = productRegistryRepository.save(productRegistry);
+
+        paymentRegistryService.createPaymentSchedule(savedProductRegistry);
     }
 }

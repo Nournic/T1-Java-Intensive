@@ -9,8 +9,6 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import ru.t1.nour.microservice.model.enums.CardStatus;
 import ru.t1.nour.microservice.model.enums.PaymentSystem;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor

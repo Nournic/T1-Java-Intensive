@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.t1.nour.microservice.model.dto.request.LoginRequest;
-import ru.t1.nour.microservice.model.dto.response.MessageResponse;
-import ru.t1.nour.microservice.model.dto.request.SignUpRequest;
 import ru.t1.nour.microservice.service.impl.UserService;
 
 @RestController

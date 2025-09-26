@@ -8,17 +8,12 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ru.t1.nour.microservice.model.ClientProduct;
 import ru.t1.nour.microservice.model.dto.request.ClientProductCreateRequest;
 import ru.t1.nour.microservice.model.dto.request.ClientProductUpdateRequest;
 import ru.t1.nour.microservice.model.dto.response.ClientProductResponse;
 import ru.t1.nour.microservice.model.dto.response.MessageResponse;
 import ru.t1.nour.microservice.repository.ClientProductRepository;
 import ru.t1.nour.microservice.service.ClientProductService;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/client-products")

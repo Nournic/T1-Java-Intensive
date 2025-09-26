@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import ru.t1.nour.microservice.model.enums.AccountStatus;
-import ru.t1.nour.microservice.model.enums.TransactionStatus;
 
 import java.math.BigDecimal;
 
