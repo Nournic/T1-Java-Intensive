@@ -17,7 +17,7 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_blacklist_registries"/>
             </column>
             <column name="document_type" type="VARCHAR(255)"/>
-            <column name="document_id" type="BIGINT"/>
+            <column name="document_id" type="VARCHAR(255)"/>
             <column name="blacklisted_at" type="DATETIME"/>
             <column name="reason" type="VARCHAR(255)"/>
             <column name="blacklist_expiration_date" type="DATETIME"/>

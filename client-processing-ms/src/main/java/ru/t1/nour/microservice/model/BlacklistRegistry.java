@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "blacklist_registries")
+@Table(name = "blacklist_registries", uniqueConstraints = {
+        @UniqueConstraint(name = "unique_document_type_id", columnNames = {"document_type","document_id"})
+})
 public class BlacklistRegistry extends AbstractPersistable<Long> {
     @Enumerated(EnumType.STRING)
     @Column(name = "document_type")
