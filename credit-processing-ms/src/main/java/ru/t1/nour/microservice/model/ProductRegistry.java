@@ -34,4 +34,7 @@ public class ProductRegistry extends AbstractPersistable<Long> {
     @Column(name = "open_date")
     private LocalDateTime openDate;
 
+    @Column(name = "month_count")
+    private Long monthCount;
+
 }

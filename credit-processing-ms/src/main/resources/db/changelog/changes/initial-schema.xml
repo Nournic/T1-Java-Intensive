@@ -42,4 +42,10 @@
                                  constraintName="FK_PAYMENT_REGISTRIES_ON_PRODUCT_REGISTRY" referencedColumnNames="id"
                                  referencedTableName="product_registries"/>
     </changeSet>
+    <changeSet id="1758889281194-1" author="Dmitriy">
+        <addColumn tableName="product_registries">
+            <column name="month_count" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

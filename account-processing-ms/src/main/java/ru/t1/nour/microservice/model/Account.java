@@ -39,5 +39,4 @@ public class Account extends AbstractPersistable<Long> {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private AccountStatus accountStatus;
-
 }
