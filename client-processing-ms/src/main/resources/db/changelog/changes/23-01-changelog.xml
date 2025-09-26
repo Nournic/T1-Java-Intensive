@@ -8,6 +8,9 @@
     <changeSet id="1758623741592-1" author="diman">
         <createSequence sequenceName="blacklist_registries_seq" startValue="1" incrementBy="50"/>
     </changeSet>
+    <changeSet id="1758702042204-1" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="roles_seq" startValue="1"/>
+    </changeSet>
     <changeSet id="1758623718216-1" author="diman">
         <createTable tableName="blacklist_registries">
             <column name="id" type="BIGINT">
@@ -20,5 +23,34 @@
             <column name="blacklist_expiration_date" type="DATETIME"/>
         </createTable>
     </changeSet>
+    <changeSet id="1758702042204-2" author="diman (generated)">
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_roles"/>
+            </column>
+            <column name="name" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758702042204-3" author="diman (generated)">
+        <createTable tableName="users_roles">
+            <column name="roles_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_roles"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_roles"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758702042204-4" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="roles_id" baseTableName="users_roles"
+                                 constraintName="FK_USEROL_ON_ROLE" referencedColumnNames="id"
+                                 referencedTableName="roles"/>
+    </changeSet>
+    <changeSet id="1758702042204-5" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_roles"
+                                 constraintName="FK_USEROL_ON_USER" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
 
 </databaseChangeLog>
