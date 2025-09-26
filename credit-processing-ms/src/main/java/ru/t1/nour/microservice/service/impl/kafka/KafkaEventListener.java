@@ -13,7 +13,5 @@ public class KafkaEventListener {
     @KafkaListener(topics = {"client_credit_products"})
     public void handleClientProductCreditEvent(ClientProductEventDTO event){
         log.info("Received ClientProductEvent: {}", event);
-
-        accountService.registerNewAccount(event);
     }
 }

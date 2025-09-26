@@ -35,6 +35,9 @@
             <column name="product_id" type="BIGINT"/>
             <column name="interest_rate" type="DECIMAL(19, 2)"/>
             <column name="open_date" type="DATETIME"/>
+            <column name="amount" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="1758529926366-5" author="diman (generated)">
@@ -44,7 +47,7 @@
     </changeSet>
     <changeSet id="1758889281194-1" author="Dmitriy">
         <addColumn tableName="product_registries">
-            <column name="month_count" type="BIGINT"/>
+            <column name="month_count" type="INT"/>
         </addColumn>
     </changeSet>
 

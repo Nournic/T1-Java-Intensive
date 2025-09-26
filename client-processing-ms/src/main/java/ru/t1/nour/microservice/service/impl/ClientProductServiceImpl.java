@@ -20,6 +20,7 @@ import ru.t1.nour.microservice.repository.ProductRepository;
 import ru.t1.nour.microservice.service.ClientProductService;
 import ru.t1.nour.microservice.service.impl.kafka.ProductEventProducer;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class ClientProductServiceImpl implements ClientProductService {
 
         ClientProduct savedProduct = clientProductRepository.save(clientProduct);
 
-        ClientProductEventDTO event = createEvent(savedProduct, "CREATED");
+        ClientProductEventDTO event = createEvent(savedProduct, request, "CREATED");
         productEventProducer.sendProductEvent(event);
 
         return mapper.toClientProductResponse(savedProduct);
@@ -87,7 +88,7 @@ public class ClientProductServiceImpl implements ClientProductService {
 
         ClientProduct updatedProduct = clientProductRepository.save(clientProduct);
 
-        ClientProductEventDTO event = createEvent(updatedProduct, "UPDATED");
+        ClientProductEventDTO event = createEvent(updatedProduct, null,"UPDATED");
         productEventProducer.sendProductEvent(event);
 
         return mapper.toClientProductResponse(updatedProduct);
@@ -99,19 +100,21 @@ public class ClientProductServiceImpl implements ClientProductService {
         ClientProduct productToDelete = clientProductRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        ClientProductEventDTO event = createEvent(productToDelete, "DELETED");
+        ClientProductEventDTO event = createEvent(productToDelete, null, "DELETED");
         productEventProducer.sendProductEvent(event);
 
         clientProductRepository.deleteById(id);
     }
 
-    private ClientProductEventDTO createEvent(ClientProduct clientProduct, String eventType){
+    private ClientProductEventDTO createEvent(ClientProduct clientProduct, ClientProductCreateRequest request, String eventType){
         return new ClientProductEventDTO(
                 clientProduct.getId(),
                 clientProduct.getClient().getId(),
                 clientProduct.getProduct().getId(),
-                clientProduct.getProduct().getProductKey().toString(),
+                clientProduct.getProduct().getKey().toString(),
                 clientProduct.getStatus().name(),
+                request != null ? request.getRequestedAmount() : BigDecimal.valueOf(0.01),
+                request != null ? request.getMonthCount() : 1,
                 eventType
         );
     }

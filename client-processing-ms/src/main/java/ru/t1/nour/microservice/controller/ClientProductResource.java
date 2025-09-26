@@ -46,7 +46,7 @@ public class ClientProductResource {
     @PostMapping
     public ResponseEntity<ClientProductResponse> create(@RequestBody ClientProductCreateRequest request) {
         return ResponseEntity
-                .ok()
+                .status(HttpStatus.CREATED)
                 .body(clientProductService.create(request));
     }
 

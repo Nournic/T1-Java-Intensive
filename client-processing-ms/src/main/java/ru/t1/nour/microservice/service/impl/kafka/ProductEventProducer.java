@@ -14,6 +14,7 @@ public class ProductEventProducer {
 
     private static final String TOPIC_CLIENT_CREDIT_PRODUCTS = "client_credit_products";
 
+
     private final KafkaTemplate<String, ClientProductEventDTO> kafkaTemplate;
 
     public void sendProductEvent(ClientProductEventDTO event){

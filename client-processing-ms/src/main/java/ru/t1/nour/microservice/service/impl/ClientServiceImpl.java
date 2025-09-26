@@ -11,6 +11,7 @@ import ru.t1.nour.microservice.model.Role;
 import ru.t1.nour.microservice.model.User;
 import ru.t1.nour.microservice.model.dto.request.ClientRegistrationRequest;
 import ru.t1.nour.microservice.model.dto.UserDto;
+import ru.t1.nour.microservice.model.dto.response.ClientInfoResponse;
 import ru.t1.nour.microservice.model.enums.RoleEnum;
 import ru.t1.nour.microservice.repository.BlacklistRegistryRepository;
 import ru.t1.nour.microservice.repository.ClientRepository;
@@ -82,5 +83,14 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.save(newClient);
 
         return new UserDto(savedUser.getId(), savedUser.getLogin(), savedUser.getEmail());
+    }
+
+    @Override
+    public ClientInfoResponse findInfoById(long id) {
+        Client client = clientRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Client with ID " + id + " is not found")
+        );
+
+        return clientMapper.toClientInfoResponse(client);
     }
 }

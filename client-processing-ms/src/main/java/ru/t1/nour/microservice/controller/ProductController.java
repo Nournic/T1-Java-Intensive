@@ -50,8 +50,9 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody ProductCreateRequest request) {
-        return ResponseEntity.ok().body(
-                productService.create(request)
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(productService.create(request)
         );
     }
 
