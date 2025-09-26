@@ -15,13 +15,7 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
 public class ClientDto {
-    String clientId;
     String firstName;
     String middleName;
     String lastName;
-    LocalDate dateOfBirth;
-    DocumentType documentType;
-    Long documentId;
-    String documentPrefix;
-    String documentSuffix;
 }

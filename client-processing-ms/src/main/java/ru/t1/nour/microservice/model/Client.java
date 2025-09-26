@@ -1,10 +1,8 @@
 package ru.t1.nour.microservice.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import ru.t1.nour.microservice.model.enums.DocumentType;
 
@@ -15,9 +13,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "clients")
 public class Client extends AbstractPersistable<Long> {
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -28,7 +26,9 @@ public class Client extends AbstractPersistable<Long> {
      * FF - bank division number,
      * NNNNNNNN - ordinal number
      * */
-    @Column(name = "client_id")
+    @GeneratedValue(generator = "client-id-generator")
+    @GenericGenerator(name = "client-id-generator", strategy = "ru.t1.nour.microservice.util.generators.ClientIdGenerator")
+    @Column(name = "client_id", unique = true, nullable = false, updatable = false)
     private String clientId;
 
     @Column(name = "first_name")
@@ -48,7 +48,7 @@ public class Client extends AbstractPersistable<Long> {
     private DocumentType documentType;
 
     @Column(name = "document_id")
-    private Long documentId;
+    private String documentId;
 
     @Column(name = "document_prefix")
     private String documentPrefix;

@@ -1,8 +1,8 @@
 package ru.t1.nour.microservice.service;
 
-import ru.t1.nour.microservice.model.Client;
-import ru.t1.nour.microservice.model.dto.ClientDto;
+import ru.t1.nour.microservice.model.dto.RegistrationRequest;
+import ru.t1.nour.microservice.model.dto.UserDto;
 
 public interface ClientService {
-    Client registerClient(ClientDto dto);
+    UserDto registerClient(RegistrationRequest clientRequest);
 }
