@@ -10,6 +10,10 @@
     <changeSet id="1758529827175-2" author="diman (generated)">
         <createSequence incrementBy="50" sequenceName="clients_seq" startValue="1"/>
     </changeSet>
+    <changeSet id="1758739126397-1" author="diman">
+        <createSequence sequenceName="clients_add_client_id_seq" startValue="1" incrementBy="1" cacheSize="10"/>
+    </changeSet>
+
     <changeSet id="1758529827175-3" author="diman (generated)">
         <createSequence incrementBy="50" sequenceName="products_seq" startValue="1"/>
     </changeSet>
@@ -40,7 +44,7 @@
             <column name="last_name" type="VARCHAR(255)"/>
             <column name="date_of_birth" type="DATE"/>
             <column name="document_type" type="VARCHAR(255)"/>
-            <column name="document_id" type="BIGINT"/>
+            <column name="document_id" type="VARCHAR(255)"/>
             <column name="document_prefix" type="VARCHAR(255)"/>
             <column name="document_suffix" type="VARCHAR(255)"/>
         </createTable>
