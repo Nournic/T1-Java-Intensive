@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-import ru.t1.nour.microservice.model.enums.Key;
+import ru.t1.nour.microservice.model.enums.ProductKey;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +22,7 @@ public class Product extends AbstractPersistable<Long> {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "key")
-    private Key key;
+    private ProductKey key;
 
     @Column(name = "create_date")
     private LocalDateTime createDate;

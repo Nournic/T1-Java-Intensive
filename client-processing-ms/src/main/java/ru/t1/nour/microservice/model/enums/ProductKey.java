@@ -1,6 +1,6 @@
 package ru.t1.nour.microservice.model.enums;
 
-public enum Key {
+public enum ProductKey {
     DC("DC"),
     CC("CC"),
     AC("AC"),
@@ -13,7 +13,7 @@ public enum Key {
 
     private String name;
 
-    Key(String name) {
+    ProductKey(String name) {
         this.name = name;
     }
 

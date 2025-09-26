@@ -16,10 +16,6 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "clients")
 public class Client extends AbstractPersistable<Long> {
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     /**
      * Format: XXFFNNNNNNNN,
      * where. XX - region number,
@@ -30,6 +26,10 @@ public class Client extends AbstractPersistable<Long> {
     @GenericGenerator(name = "client-id-generator", strategy = "ru.t1.nour.microservice.util.generators.ClientIdGenerator")
     @Column(name = "client_id", unique = true, nullable = false, updatable = false)
     private String clientId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "first_name")
     private String firstName;

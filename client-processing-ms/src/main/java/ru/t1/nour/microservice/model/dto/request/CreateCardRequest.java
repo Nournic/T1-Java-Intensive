@@ -1,8 +1,8 @@
 package ru.t1.nour.microservice.model.dto.request;
 
-import ru.t1.nour.microservice.model.enums.Key;
+import ru.t1.nour.microservice.model.enums.ProductKey;
 
 public class CreateCardRequest {
     private String clientId;
-    private Key key;
+    private ProductKey productKey;
 }

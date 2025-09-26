@@ -87,7 +87,6 @@ public class ClientProductServiceImpl implements ClientProductService {
 
         ClientProduct updatedProduct = clientProductRepository.save(clientProduct);
 
-
         ClientProductEventDTO event = createEvent(updatedProduct, "UPDATED");
         productEventProducer.sendProductEvent(event);
 
@@ -111,7 +110,7 @@ public class ClientProductServiceImpl implements ClientProductService {
                 clientProduct.getId(),
                 clientProduct.getClient().getId(),
                 clientProduct.getProduct().getId(),
-                clientProduct.getProduct().getKey().toString(),
+                clientProduct.getProduct().getProductKey().toString(),
                 clientProduct.getStatus().name(),
                 eventType
         );

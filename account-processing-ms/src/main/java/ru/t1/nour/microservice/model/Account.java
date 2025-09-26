@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import ru.t1.nour.microservice.model.enums.AccountStatus;
 import ru.t1.nour.microservice.model.enums.TransactionStatus;
 
 import java.math.BigDecimal;
@@ -37,6 +38,6 @@ public class Account extends AbstractPersistable<Long> {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private TransactionStatus transactionStatus;
+    private AccountStatus accountStatus;
 
 }

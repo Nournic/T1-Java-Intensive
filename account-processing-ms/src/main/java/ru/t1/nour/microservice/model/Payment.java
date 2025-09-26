@@ -18,6 +18,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "payments")
 public class Payment extends AbstractPersistable<Long> {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
     @Column(name = "payment_date")
     private LocalDateTime paymentDate;
 
@@ -33,9 +37,4 @@ public class Payment extends AbstractPersistable<Long> {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private PaymentType type;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    private Account account;
-
 }

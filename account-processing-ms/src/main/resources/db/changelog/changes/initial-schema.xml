@@ -47,7 +47,6 @@
             <column name="card_id" type="BIGINT"/>
             <column name="payment_system" type="VARCHAR(255)"/>
             <column name="status" type="VARCHAR(255)"/>
-            <column name="timestamp" type="DATETIME"/>
             <column name="account_id" type="BIGINT"/>
         </createTable>
     </changeSet>

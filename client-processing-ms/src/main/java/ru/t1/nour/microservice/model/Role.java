@@ -15,7 +15,6 @@ import ru.t1.nour.microservice.model.enums.RoleEnum;
 @NoArgsConstructor
 @Table(name = "roles")
 public class Role extends AbstractPersistable<Long> {
-
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private RoleEnum name;

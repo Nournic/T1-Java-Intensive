@@ -18,6 +18,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "cards")
 public class Card extends AbstractPersistable<Long> {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
     @Column(name = "card_id")
     private Long cardId;
 
@@ -28,11 +32,4 @@ public class Card extends AbstractPersistable<Long> {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private CardStatus status;
-
-    @Column(name = "timestamp")
-    private LocalDateTime timestamp;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    private Account account;
 }

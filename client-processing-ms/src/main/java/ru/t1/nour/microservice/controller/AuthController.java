@@ -23,12 +23,12 @@ public class AuthController {
         return userService.authorize(loginRequest);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest){
-        userService.registerUser(signUpRequest);
-        return ResponseEntity
-                .ok()
-                .body(new MessageResponse("User has been created"));
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest){
+//        userService.registerUser(signUpRequest);
+//        return ResponseEntity
+//                .ok()
+//                .body(new MessageResponse("User has been created"));
+//    }
 }
 
