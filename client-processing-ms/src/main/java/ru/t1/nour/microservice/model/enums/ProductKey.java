@@ -1,5 +1,10 @@
 package ru.t1.nour.microservice.model.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Getter
 public enum ProductKey {
     DC("DC"),
     CC("CC"),
@@ -11,14 +16,5 @@ public enum ProductKey {
     INS("INS"),
     BS("BS");
 
-    private final String name;
-
-    ProductKey(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
+    private final String value;
 }

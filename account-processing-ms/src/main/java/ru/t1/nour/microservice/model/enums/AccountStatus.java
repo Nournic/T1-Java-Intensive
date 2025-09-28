@@ -1,5 +1,10 @@
 package ru.t1.nour.microservice.model.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Getter
 public enum AccountStatus {
     PENDING("PENDING"),
     ACTIVE("ACTIVE"),
@@ -9,8 +14,4 @@ public enum AccountStatus {
     CLOSED("CLOSED");
 
     private final String value;
-
-    AccountStatus(String value) {
-        this.value = value;
-    }
 }
