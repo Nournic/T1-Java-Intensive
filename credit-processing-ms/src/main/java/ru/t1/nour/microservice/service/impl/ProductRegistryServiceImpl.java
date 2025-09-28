@@ -2,6 +2,7 @@ package ru.t1.nour.microservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.t1.nour.microservice.model.ProductRegistry;
 import ru.t1.nour.microservice.model.dto.ClientInfoResponse;
@@ -27,9 +28,11 @@ public class ProductRegistryServiceImpl implements ProductRegistryService {
 
     private final ClientApiFacade clientApiFacade;
 
-    private final BigDecimal LIMIT_ON_TOTAL_AMOUNT_OF_CREDITS;
+    @Value("${app.credit.total_limit}")
+    private BigDecimal LIMIT_ON_TOTAL_AMOUNT_OF_CREDITS;
 
-    private static final BigDecimal DEFAULT_INTEREST_RATE = BigDecimal.valueOf(1.15);
+    @Value("${app.credit.interest_rate}")
+    private BigDecimal DEFAULT_INTEREST_RATE;
 
     public void createByEvent(ClientProductEventDTO event){
         Long clientId = event.getClientId();

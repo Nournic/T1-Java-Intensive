@@ -8,7 +8,7 @@ import ru.t1.nour.microservice.model.dto.request.ProductCreateRequest;
 import ru.t1.nour.microservice.model.dto.response.ProductResponse;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {ClientMapper.class, ProductMapper.class})
+        uses = {ClientMapper.class})
 public interface ProductMapper {
     Product toEntity(ProductResponse productResponse);
 

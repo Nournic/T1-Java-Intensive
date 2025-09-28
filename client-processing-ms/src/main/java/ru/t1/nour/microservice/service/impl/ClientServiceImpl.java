@@ -26,6 +26,8 @@ import java.util.Set;
 @Slf4j
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
+    private final ClientIdGeneratorService clientIdGenerationService;
+
     private final PasswordEncoder encoder;
 
     private final ClientMapper clientMapper;
@@ -80,6 +82,10 @@ public class ClientServiceImpl implements ClientService {
 
         User savedUser = userRepository.save(newUser);
         newClient.setUser(savedUser);
+
+        String newClientId = clientIdGenerationService.generateNext();
+        newClient.setClientId(newClientId);
+
         clientRepository.save(newClient);
 
         return new UserDto(savedUser.getId(), savedUser.getLogin(), savedUser.getEmail());
