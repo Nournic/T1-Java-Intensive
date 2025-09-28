@@ -21,17 +21,13 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends AbstractPersistable<Long> {
 
-    @NotBlank
-    @Size(max = 20)
+    @Column(name = "login", nullable = false)
     private String login;
 
-    @NotBlank
-    @Size(max = 50)
-    @Email
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @NotBlank
-    @Size(max = 120)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @ManyToMany

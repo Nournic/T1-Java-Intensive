@@ -1,6 +1,7 @@
 package ru.t1.nour.microservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,7 +50,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> create(@RequestBody ProductCreateRequest request) {
+    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductCreateRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(productService.create(request)
@@ -57,7 +58,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @RequestBody ProductUpdateRequest request) {
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @Valid @RequestBody ProductUpdateRequest request) {
         return ResponseEntity.ok().body(
                 productService.update(id, request)
         );

@@ -27,11 +27,11 @@ public class BlacklistRegistry extends AbstractPersistable<Long> {
     private Long documentId;
 
     @Column(name = "blacklisted_at")
-    private LocalDateTime blacklisted_at;
+    private LocalDateTime blacklistedAt;
 
     @Column(name = "reason")
     private String reason;
 
     @Column(name = "blacklist_expiration_date")
-    private LocalDateTime blacklist_expiration_date;
+    private LocalDateTime expirationDate;
 }

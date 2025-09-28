@@ -22,32 +22,30 @@ public class Client extends AbstractPersistable<Long> {
      * FF - bank division number,
      * NNNNNNNN - ordinal number
      * */
-    @GeneratedValue(generator = "client-id-generator")
-    @GenericGenerator(name = "client-id-generator", strategy = "ru.t1.nour.microservice.util.generators.ClientIdGenerator")
     @Column(name = "client_id", unique = true, nullable = false, updatable = false)
     private String clientId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", unique = true, nullable = false, updatable = false)
     private User user;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @Column(name = "middle_name")
     private String middleName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "document_type")
+    @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 
-    @Column(name = "document_id")
+    @Column(name = "document_id", nullable = false)
     private String documentId;
 
     @Column(name = "document_prefix")

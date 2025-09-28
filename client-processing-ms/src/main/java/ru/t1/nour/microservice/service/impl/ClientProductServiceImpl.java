@@ -111,7 +111,7 @@ public class ClientProductServiceImpl implements ClientProductService {
                 clientProduct.getId(),
                 clientProduct.getClient().getId(),
                 clientProduct.getProduct().getId(),
-                clientProduct.getProduct().getKey().toString(),
+                clientProduct.getProduct().getKey().getValue(),
                 clientProduct.getStatus().name(),
                 request != null ? request.getRequestedAmount() : BigDecimal.valueOf(0.01),
                 request != null ? request.getMonthCount() : 1,

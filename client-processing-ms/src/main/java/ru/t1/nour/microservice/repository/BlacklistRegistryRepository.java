@@ -19,6 +19,6 @@ public interface BlacklistRegistryRepository extends JpaRepository<BlacklistRegi
      */
     @Query("SELECT COUNT(b) > 0 FROM BlacklistRegistry b " +
             "WHERE b.documentType = :documentType AND b.documentId = :documentId " +
-            "AND (b.blacklistExpirationDate IS NULL OR b.blacklistExpirationDate >= :currentDate)")
+            "AND (b.expirationDate IS NULL OR b.expirationDate >= :currentDate)")
     boolean isCurrentlyBlacklisted(DocumentType documentType, String documentId, LocalDateTime currentDate);
 }

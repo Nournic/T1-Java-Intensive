@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1759072453174-21" author="diman (generated)">
+        <addColumn tableName="roles">
+            <column name="role_name" type="VARCHAR(20)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1759072453174-22" author="diman (generated)">
+        <addNotNullConstraint columnName="role_name" tableName="roles"/>
+    </changeSet>
+    <changeSet id="1759072453174-23" author="diman (generated)">
+        <addUniqueConstraint columnNames="client_id" constraintName="UC_CLIENTS_CLIENT" tableName="clients"/>
+    </changeSet>
+    <changeSet id="1759072453174-24" author="diman (generated)">
+        <addUniqueConstraint columnNames="user_id" constraintName="UC_CLIENTS_USER" tableName="clients"/>
+    </changeSet>
+    <changeSet id="1759072453174-25" author="diman (generated)">
+        <addUniqueConstraint columnNames="document_type, document_id" constraintName="unique_document_type_id"
+                             tableName="blacklist_registries"/>
+    </changeSet>
+    <changeSet id="1759072453174-26" author="diman (generated)">
+        <dropColumn columnName="name" tableName="roles"/>
+    </changeSet>
+    <changeSet id="1759072453174-27" author="diman (generated)">
+        <dropSequence sequenceName="clients_add_client_id_seq"/>
+    </changeSet>
+    <changeSet id="1759072453174-1" author="diman (generated)">
+        <addNotNullConstraint columnDataType="BIGINT" columnName="client_id" tableName="client_products"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-2" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="client_id" tableName="clients" validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-3" author="diman (generated)">
+        <addNotNullConstraint columnDataType="DATETIME" columnName="create_date" tableName="products" validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-4" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="document_id" tableName="clients"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-5" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="document_type" tableName="clients"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-6" author="diman (generated)">
+        <modifyDataType columnName="email" newDataType="VARCHAR(255)" tableName="users"/>
+    </changeSet>
+    <changeSet id="1759072453174-7" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="email" tableName="users" validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-8" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="first_name" tableName="clients"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-9" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="key" tableName="products" validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-10" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="last_name" tableName="clients" validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-11" author="diman (generated)">
+        <modifyDataType columnName="login" newDataType="VARCHAR(255)" tableName="users"/>
+    </changeSet>
+    <changeSet id="1759072453174-12" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="login" tableName="users" validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-13" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="name" tableName="products" validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-14" author="diman (generated)">
+        <addNotNullConstraint columnDataType="DATETIME" columnName="open_date" tableName="client_products"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-15" author="diman (generated)">
+        <modifyDataType columnName="password" newDataType="VARCHAR(255)" tableName="users"/>
+    </changeSet>
+    <changeSet id="1759072453174-16" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="password" tableName="users" validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-17" author="diman (generated)">
+        <addNotNullConstraint columnDataType="BIGINT" columnName="product_id" tableName="client_products"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-18" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="product_id" tableName="products"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-19" author="diman (generated)">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="status" tableName="client_products"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1759072453174-20" author="diman (generated)">
+        <addNotNullConstraint columnDataType="BIGINT" columnName="user_id" tableName="clients" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

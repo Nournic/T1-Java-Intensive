@@ -14,6 +14,7 @@ import ru.t1.nour.microservice.model.enums.ProductKey;
 public class ProductCreateRequest {
     @NotBlank
     String name;
+
     @NotBlank
     ProductKey productKey;
 }

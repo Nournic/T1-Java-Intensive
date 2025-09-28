@@ -1,6 +1,7 @@
 package ru.t1.nour.microservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ import ru.t1.nour.microservice.service.ClientProductService;
 @RestController
 @RequestMapping("/api/client-products")
 @RequiredArgsConstructor
-public class ClientProductResource {
+public class ClientProductController {
     private final ClientProductService clientProductService;
 
     private final ClientProductRepository clientProductRepository;
@@ -39,14 +40,14 @@ public class ClientProductResource {
     }
 
     @PostMapping
-    public ResponseEntity<ClientProductResponse> create(@RequestBody ClientProductCreateRequest request) {
+    public ResponseEntity<ClientProductResponse> create(@Valid @RequestBody ClientProductCreateRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(clientProductService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientProductResponse> update(@PathVariable Long id, @RequestBody ClientProductUpdateRequest request) {
+    public ResponseEntity<ClientProductResponse> update(@PathVariable Long id, @Valid @RequestBody ClientProductUpdateRequest request) {
         return ResponseEntity
                 .ok()
                 .body(clientProductService.update(id, request));

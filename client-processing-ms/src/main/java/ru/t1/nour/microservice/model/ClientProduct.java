@@ -21,21 +21,20 @@ import java.time.LocalDateTime;
 public class ClientProduct extends AbstractPersistable<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @NotBlank
-    @Column(name = "open_date")
+    @Column(name = "open_date", nullable = false)
     private LocalDateTime openDate;
 
     @Column(name = "close_date")
     private LocalDateTime closeDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private Status status;
 }

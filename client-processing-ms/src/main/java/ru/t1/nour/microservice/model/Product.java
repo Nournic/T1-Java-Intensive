@@ -17,22 +17,22 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "products")
 public class Product extends AbstractPersistable<Long> {
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "key")
+    @Column(name = "key", nullable = false)
     private ProductKey key;
 
-    @Column(name = "create_date")
+    @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "product_id")
+    @Column(name = "product_id", nullable = false)
     private String productId;
 
     @PostPersist
     public void generateProductId(){
         if(this.productId == null)
-            this.productId = this.key.toString() + this.getId();
+            this.productId = this.key.getValue() + this.getId();
     }
 }

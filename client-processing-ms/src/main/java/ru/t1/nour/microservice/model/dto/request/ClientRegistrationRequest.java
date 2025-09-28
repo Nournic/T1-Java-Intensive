@@ -14,17 +14,21 @@ public class ClientRegistrationRequest {
     @NotBlank
     @Size(min = 8, max = 100)
     private String login;
+
     @NotBlank
     @Size(min = 8, max = 100)
     private String password;
 
     @NotBlank
     @Email
+    @Size(max = 50)
     private String email;
 
     @NotBlank
     private String firstName;
+
     private String middleName;
+
     @NotBlank
     private String lastName;
 

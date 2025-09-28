@@ -13,11 +13,6 @@ import lombok.Value;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
     Long id;
-    @Size(max = 20)
-    @NotBlank
     String login;
-    @Size(max = 50)
-    @Email
-    @NotBlank
     String email;
 }
