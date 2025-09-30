@@ -5,8 +5,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import ru.t1.nour.microservice.model.dto.kafka.TransactionEventDTO;
 
-import java.util.UUID;
-
 @Component
 @RequiredArgsConstructor
 public class KafkaEventProducer {

@@ -7,14 +7,15 @@ import lombok.Setter;
 import ru.t1.nour.microservice.model.enums.TransactionStatus;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class PaymentResultEventDTO {
-    Long transactionId;
-    Long paymentRegistryId;
+    UUID transactionId;
+    UUID paymentRegistryId;
     Long productRegistryId;
     BigDecimal amountPaid;
     private TransactionStatus status;
