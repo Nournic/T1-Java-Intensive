@@ -9,6 +9,8 @@ import ru.t1.nour.microservice.mapper.PaymentRegistryMapper;
 import ru.t1.nour.microservice.model.PaymentRegistry;
 import ru.t1.nour.microservice.model.ProductRegistry;
 import ru.t1.nour.microservice.model.dto.NextCreditPaymentDTO;
+import ru.t1.nour.microservice.model.dto.kafka.PaymentResultEventDTO;
+import ru.t1.nour.microservice.model.dto.kafka.enums.PaymentStatus;
 import ru.t1.nour.microservice.repository.PaymentRegistryRepository;
 import ru.t1.nour.microservice.service.PaymentRegistryService;
 
@@ -117,5 +119,48 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
 
         return paymentRegistryMapper.toNextCreditPaymentDTO(payment);
 
+    }
+
+    public void performPaymentEvent(PaymentResultEventDTO event){
+        PaymentRegistry paymentRegistry = paymentRegistryRepository.findById(event.getPaymentRegistryId())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Payment with ID " + event.getPaymentRegistryId() + " is not found.")
+                );
+
+        if(event.getStatus()== PaymentStatus.FAILED) {
+            log.error("Transaction failed");
+            paymentRegistry.setExpired(true);
+            paymentRegistryRepository.save(paymentRegistry);
+            return;
+        }
+
+        if(event.getStatus() == PaymentStatus.SUCCEEDED){
+            log.info("Processing successful payment for payment {}", paymentRegistry.getId());
+
+            Long productRegistryId = paymentRegistry.getProductRegistry().getId();
+
+            BigDecimal totalRemainingDebt = paymentRegistryRepository.findTotalRemainingDebtByProductRegistryId(productRegistryId);
+            if (totalRemainingDebt == null)
+                totalRemainingDebt = BigDecimal.ZERO;
+
+
+            if (event.getAmountPaid().setScale(2, RoundingMode.HALF_UP)
+                    .compareTo(totalRemainingDebt.setScale(2, RoundingMode.HALF_UP)) == 0) {
+
+                log.info("Full repayment detected for productRegistryId: {}", productRegistryId);
+
+                List<PaymentRegistry> unpaidPayments = paymentRegistryRepository
+                        .findAllByProductRegistryIdAndPayedAtIsNull(productRegistryId);
+
+                LocalDateTime now = LocalDateTime.now();
+                for (PaymentRegistry payment : unpaidPayments) {
+                    payment.setPaymentDate(now);
+                }
+
+            } else {
+                log.info("Standard monthly payment processed for paymentId: {}", targetPayment.getId());
+                paymentRegistry.setPaymentDate(LocalDateTime.now());
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@ import ru.t1.nour.microservice.repository.PaymentRegistryRepository;
 import ru.t1.nour.microservice.repository.ProductRegistryRepository;
 import ru.t1.nour.microservice.service.PaymentRegistryService;
 import ru.t1.nour.microservice.service.ProductRegistryService;
+import ru.t1.nour.microservice.service.impl.kafka.ProductEventProducer;
 import ru.t1.nour.microservice.web.ClientApiFacade;
 
 import java.math.BigDecimal;
@@ -20,6 +21,8 @@ import java.time.LocalDateTime;
 @Service
 @Slf4j
 public class ProductRegistryServiceImpl implements ProductRegistryService {
+    private final ProductEventProducer productEventProducer;
+
     private final ProductRegistryRepository productRegistryRepository;
 
     private final PaymentRegistryRepository paymentRegistryRepository;
@@ -60,6 +63,7 @@ public class ProductRegistryServiceImpl implements ProductRegistryService {
         }
 
         log.info("Credit APPROVED for client {}.", clientId);
+        productEventProducer.sendProductEvent(event);
         openProductAndCreateSchedule(event);
     }
 

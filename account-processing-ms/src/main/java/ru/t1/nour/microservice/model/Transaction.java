@@ -11,6 +11,7 @@ import ru.t1.nour.microservice.model.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,7 +19,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "transactions")
-public class Transaction extends AbstractPersistable<Long> {
+public class Transaction{
+    @Id
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;

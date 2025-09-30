@@ -5,6 +5,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import ru.t1.nour.microservice.model.dto.kafka.TransactionEventDTO;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class KafkaEventProducer {
@@ -13,6 +15,7 @@ public class KafkaEventProducer {
     private final KafkaTemplate<String, TransactionEventDTO> kafkaTemplate;
 
     public void sendTransaction(TransactionEventDTO event){
-        kafkaTemplate.send(TOPIC_CLIENT_TRANSACTION, event);
+        String key = event.getTransactionId().toString();
+        kafkaTemplate.send(TOPIC_CLIENT_TRANSACTION, key, event);
     }
 }

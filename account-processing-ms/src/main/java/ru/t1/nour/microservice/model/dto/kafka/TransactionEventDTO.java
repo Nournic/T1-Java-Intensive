@@ -9,12 +9,15 @@ import ru.t1.nour.microservice.model.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransactionEventDTO {
+    private UUID transactionId;
+
     private Long accountId;
 
     private Long cardId;

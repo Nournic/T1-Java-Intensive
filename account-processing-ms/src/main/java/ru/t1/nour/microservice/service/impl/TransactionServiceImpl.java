@@ -3,9 +3,13 @@ package ru.t1.nour.microservice.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import ru.t1.nour.microservice.model.Account;
 import ru.t1.nour.microservice.model.Card;
+import ru.t1.nour.microservice.model.Transaction;
 import ru.t1.nour.microservice.model.dto.NextCreditPaymentDTO;
 import ru.t1.nour.microservice.model.dto.kafka.TransactionEventDTO;
 import ru.t1.nour.microservice.model.enums.CardStatus;
@@ -13,6 +17,7 @@ import ru.t1.nour.microservice.model.enums.TransactionStatus;
 import ru.t1.nour.microservice.model.enums.TransactionType;
 import ru.t1.nour.microservice.repository.AccountRepository;
 import ru.t1.nour.microservice.repository.CardRepository;
+import ru.t1.nour.microservice.repository.TransactionRepository;
 import ru.t1.nour.microservice.service.TransactionService;
 import ru.t1.nour.microservice.service.impl.kafka.KafkaEventProducer;
 import ru.t1.nour.microservice.web.CreditApiFacade;
@@ -20,8 +25,10 @@ import ru.t1.nour.microservice.web.CreditApiFacade;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -35,8 +42,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final CardRepository cardRepository;
 
+    private final TransactionRepository transactionRepository;
+
+    @Value("app.antifraud.limit.count")
+    private final long ANTIFRAUD_LIMIT_COUNT;
+
+    @Value("app.antifraud.limit.minutes")
+    private final long ANTIFRAUD_LIMIT_MINUTES;
+
     @Transactional
-    public void performTransaction(TransactionEventDTO event){
+    public void performTransaction(TransactionEventDTO event, UUID key){
         Account account = accountRepository.findById(event.getAccountId()).orElseThrow(
                 () -> new RuntimeException("Account with ID " + event.getAccountId() + " is not found.")
         );
@@ -45,8 +60,33 @@ public class TransactionServiceImpl implements TransactionService {
                 () -> new RuntimeException("Card with ID " + event.getCardId() + " is not found.")
         );
 
+        Transaction transaction = new Transaction();
+        transaction.setId(key);
+        transaction.setCard(card);
+        transaction.setAccount(account);
+        transaction.setTimestamp(LocalDateTime.now());
+        transaction.setAmount(event.getAmount());
+        transaction.setType(event.getType());
+        transaction.setStatus(TransactionStatus.PROCESSING);
+        transaction = transactionRepository.save(transaction);
+
         if(cardIsNotAvailable(card)){
             log.error("The transaction on the card with ID {} was impossible due to the account being blocked or closed.", card.getCardId());
+            transaction.setStatus(TransactionStatus.CANCELLED);
+            transactionRepository.save(transaction);
+            return;
+        }
+
+        if(transactionRepository.countByCardIdAndTimestampBetween(
+                card.getCardId(),
+                ZonedDateTime.now().minusMinutes(ANTIFRAUD_LIMIT_MINUTES),
+                ZonedDateTime.now()) > ANTIFRAUD_LIMIT_COUNT){
+            log.error("Account with ID {} exceeded the allowed number " +
+                    "of transactions on the card with ID {}, therefore it was blocked.", account.getId(), card.getId());
+            card.setStatus(CardStatus.BLOCKED);
+            transaction.setStatus(TransactionStatus.BLOCKED);
+            transactionRepository.save(transaction);
+
             return;
         }
 
@@ -57,6 +97,9 @@ public class TransactionServiceImpl implements TransactionService {
 
         if (event.getType() == TransactionType.DEPOSIT && account.getIsRecalc())
             attemptScheduledPayment(account);
+
+        transaction.setStatus(TransactionStatus.COMPLETE);
+        transactionRepository.save(transaction);
     }
 
     private Account depositMoney(Account account, BigDecimal amount){
@@ -77,7 +120,6 @@ public class TransactionServiceImpl implements TransactionService {
     private void attemptScheduledPayment(Account account) {
         log.info("Attempting scheduled payment for credit account {}", account.getId());
 
-        // 1. ЗАПРАШИВАЕМ ИНФОРМАЦИЮ У ИСТОЧНИКА ПРАВДЫ (МС-3)
         Optional<NextCreditPaymentDTO> nextPaymentOpt = creditApiFacade.getNextPayment(account.getClientId());
 
         if (nextPaymentOpt.isEmpty()) {
@@ -87,9 +129,6 @@ public class TransactionServiceImpl implements TransactionService {
 
         NextCreditPaymentDTO nextPayment = nextPaymentOpt.get();
 
-        // 2. ПРОВЕРЯЕМ УСЛОВИЯ ИЗ ТЗ
-
-        // "наступил день платежа"
         boolean isPaymentDay = LocalDate.now().isEqual(ChronoLocalDate.from(nextPayment.getPaymentDate())) ||
                 LocalDate.now().isAfter(ChronoLocalDate.from(nextPayment.getPaymentDate()));
 
@@ -98,17 +137,15 @@ public class TransactionServiceImpl implements TransactionService {
             return;
         }
 
-        // "на балансе хватает средств"
         if (account.getBalance().compareTo(nextPayment.getAmount()) >= 0) {
-            // Средств ДОСТАТОЧНО -> инициируем списание
             log.info("Sufficient funds. Debiting monthly payment...");
 
-            // Отправляем событие на списание (как и раньше)
             TransactionEventDTO withdrawEvent = new TransactionEventDTO();
             Card card = cardRepository.findByAccount_Id(account.getId()).orElseThrow(
                     () -> new RuntimeException("Card is not found for account with ID " + account.getId())
             );
 
+            withdrawEvent.setTransactionId(UUID.randomUUID());
             withdrawEvent.setCardId(card.getCardId());
             withdrawEvent.setAmount(nextPayment.getAmount());
             withdrawEvent.setAccountId(account.getId());
@@ -118,17 +155,8 @@ public class TransactionServiceImpl implements TransactionService {
             withdrawEvent.setEventType("NEW_TRANSACTION");
 
             kafkaEventProducer.sendTransaction(withdrawEvent);
-
-            // И! Отправляем событие в МС-3, что платеж УСПЕШНО ПРОШЕЛ,
-            // чтобы он мог обновить статус своего PaymentRegistry.
-            // Например, в топик `credit_payment_results`.
-
         } else {
-            // Средств НЕДОСТАТОЧНО
             log.warn("Insufficient funds for scheduled payment on account {}", account.getId());
-
-            // Отправляем событие в МС-3, что платеж ПРОВАЛИЛСЯ,
-            // чтобы он пометил свой PaymentRegistry как `expired = true`.
         }
     }
 }
