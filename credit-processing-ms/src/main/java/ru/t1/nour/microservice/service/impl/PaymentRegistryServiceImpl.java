@@ -121,6 +121,7 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
 
     }
 
+    @Transactional
     public void performPaymentEvent(PaymentResultEventDTO event){
         PaymentRegistry paymentRegistry = paymentRegistryRepository.findById(event.getPaymentRegistryId())
                 .orElseThrow(
@@ -158,7 +159,7 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
                 }
 
             } else {
-                log.info("Standard monthly payment processed for paymentId: {}", targetPayment.getId());
+                log.info("Standard monthly payment processed for paymentId: {}", paymentRegistry.getId());
                 paymentRegistry.setPaymentDate(LocalDateTime.now());
             }
         }
