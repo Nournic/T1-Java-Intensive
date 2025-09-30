@@ -2,6 +2,7 @@ package ru.t1.nour.microservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.t1.nour.microservice.model.Account;
 import ru.t1.nour.microservice.model.Card;
@@ -15,6 +16,7 @@ import ru.t1.nour.microservice.repository.CardRepository;
 import ru.t1.nour.microservice.service.AccountService;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -22,6 +24,9 @@ import java.math.BigDecimal;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final CardRepository cardRepository;
+
+    @Value("app.credit.interest_rate")
+    private final BigDecimal DEFAULT_INTEREST_RATE;
 
     @Override
     public void registerNewAccount(ClientProductEventDTO event) {
@@ -35,12 +40,19 @@ public class AccountServiceImpl implements AccountService {
         newAccount.setProductId(event.getProductId());
         newAccount.setBalance(new BigDecimal(0));
         newAccount.setCardExist(false);
-        newAccount.setInterestRate(new BigDecimal(0)); //TODO
-        newAccount.setIsRecalc(false); //TODO
+
+        boolean isCreditCard = isCreditCard(event.getProductKey());
+        newAccount.setInterestRate(isCreditCard ? DEFAULT_INTEREST_RATE : BigDecimal.ZERO);
+        newAccount.setIsRecalc(isCreditCard);
+
         newAccount.setAccountStatus(AccountStatus.ACTIVE);
 
         Account savedAccount = accountRepository.save(newAccount);
         log.info("New account was successfully create: {}", savedAccount);
+    }
+
+    private boolean isCreditCard(String productKey){
+        return List.of("IPO", "PC", "AC").contains(productKey);
     }
 
     @Override

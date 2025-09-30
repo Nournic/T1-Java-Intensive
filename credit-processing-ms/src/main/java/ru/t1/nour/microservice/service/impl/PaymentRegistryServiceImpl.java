@@ -3,15 +3,21 @@ package ru.t1.nour.microservice.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.t1.nour.microservice.mapper.PaymentRegistryMapper;
 import ru.t1.nour.microservice.model.PaymentRegistry;
 import ru.t1.nour.microservice.model.ProductRegistry;
+import ru.t1.nour.microservice.model.dto.NextCreditPaymentDTO;
+import ru.t1.nour.microservice.model.dto.kafka.PaymentResultEventDTO;
+import ru.t1.nour.microservice.model.dto.kafka.enums.PaymentStatus;
 import ru.t1.nour.microservice.repository.PaymentRegistryRepository;
 import ru.t1.nour.microservice.service.PaymentRegistryService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +30,8 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
     private static final BigDecimal MONTHS_IN_YEAR = new BigDecimal("12");
 
     private final PaymentRegistryRepository paymentRegistryRepository;
+
+    private final PaymentRegistryMapper paymentRegistryMapper;
 
     /**
      * Создает и сохраняет полный график аннуитетных платежей для кредитного договора.
@@ -100,5 +108,60 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
         BigDecimal ratio = numerator.divide(denominator, CALCULATION_SCALE, RoundingMode.HALF_UP);
 
         return creditAmount.multiply(ratio).setScale(CURRENCY_SCALE, RoundingMode.HALF_UP);
+    }
+
+    public NextCreditPaymentDTO findNextUnpaidPayment(Long clientId){
+        PaymentRegistry payment = paymentRegistryRepository
+                .findFirstByProductRegistryClientIdAndExpiredIsFalseOrderByPaymendDateAsc(clientId)
+                .orElseThrow(
+                        ()->new ResourceNotFoundException("Payments are not found.")
+                );
+
+        return paymentRegistryMapper.toNextCreditPaymentDTO(payment);
+
+    }
+
+    @Transactional
+    public void performPaymentEvent(PaymentResultEventDTO event){
+        PaymentRegistry paymentRegistry = paymentRegistryRepository.findById(event.getPaymentRegistryId())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Payment with ID " + event.getPaymentRegistryId() + " is not found.")
+                );
+
+        if(event.getStatus()== PaymentStatus.FAILED) {
+            log.error("Transaction failed");
+            paymentRegistry.setExpired(true);
+            paymentRegistryRepository.save(paymentRegistry);
+            return;
+        }
+
+        if(event.getStatus() == PaymentStatus.SUCCEEDED){
+            log.info("Processing successful payment for payment {}", paymentRegistry.getId());
+
+            Long productRegistryId = paymentRegistry.getProductRegistry().getId();
+
+            BigDecimal totalRemainingDebt = paymentRegistryRepository.findTotalRemainingDebtByProductRegistryId(productRegistryId);
+            if (totalRemainingDebt == null)
+                totalRemainingDebt = BigDecimal.ZERO;
+
+
+            if (event.getAmountPaid().setScale(2, RoundingMode.HALF_UP)
+                    .compareTo(totalRemainingDebt.setScale(2, RoundingMode.HALF_UP)) == 0) {
+
+                log.info("Full repayment detected for productRegistryId: {}", productRegistryId);
+
+                List<PaymentRegistry> unpaidPayments = paymentRegistryRepository
+                        .findAllByProductRegistryIdAndPayedAtIsNull(productRegistryId);
+
+                LocalDateTime now = LocalDateTime.now();
+                for (PaymentRegistry payment : unpaidPayments) {
+                    payment.setPaymentDate(now);
+                }
+
+            } else {
+                log.info("Standard monthly payment processed for paymentId: {}", paymentRegistry.getId());
+                paymentRegistry.setPaymentDate(LocalDateTime.now());
+            }
+        }
     }
 }
