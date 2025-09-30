@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum TransactionType {
-    DEBIT("DEBIT"),
-    CREDIT("CREDIT");
+    DEPOSIT("DEPOSIT"),
+    WITHDRAW("WITHDRAW");
 
     private final String value;
 }

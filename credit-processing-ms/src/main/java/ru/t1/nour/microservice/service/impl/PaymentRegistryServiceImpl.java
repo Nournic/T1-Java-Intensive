@@ -3,15 +3,19 @@ package ru.t1.nour.microservice.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.t1.nour.microservice.mapper.PaymentRegistryMapper;
 import ru.t1.nour.microservice.model.PaymentRegistry;
 import ru.t1.nour.microservice.model.ProductRegistry;
+import ru.t1.nour.microservice.model.dto.NextCreditPaymentDTO;
 import ru.t1.nour.microservice.repository.PaymentRegistryRepository;
 import ru.t1.nour.microservice.service.PaymentRegistryService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,8 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
     private static final BigDecimal MONTHS_IN_YEAR = new BigDecimal("12");
 
     private final PaymentRegistryRepository paymentRegistryRepository;
+
+    private final PaymentRegistryMapper paymentRegistryMapper;
 
     /**
      * Создает и сохраняет полный график аннуитетных платежей для кредитного договора.
@@ -100,5 +106,16 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
         BigDecimal ratio = numerator.divide(denominator, CALCULATION_SCALE, RoundingMode.HALF_UP);
 
         return creditAmount.multiply(ratio).setScale(CURRENCY_SCALE, RoundingMode.HALF_UP);
+    }
+
+    public NextCreditPaymentDTO findNextUnpaidPayment(Long clientId){
+        PaymentRegistry payment = paymentRegistryRepository
+                .findFirstByProductRegistryClientIdAndExpiredIsFalseOrderByPaymendDateAsc(clientId)
+                .orElseThrow(
+                        ()->new ResourceNotFoundException("Payments are not found.")
+                );
+
+        return paymentRegistryMapper.toNextCreditPaymentDTO(payment);
+
     }
 }

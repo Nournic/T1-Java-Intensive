@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import ru.t1.nour.microservice.model.PaymentRegistry;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public interface PaymentRegistryRepository extends JpaRepository<PaymentRegistry, Long> {
     @Query("SELECT SUM(pr.debtAmount) FROM PaymentRegistry pr " +
@@ -14,4 +15,6 @@ public interface PaymentRegistryRepository extends JpaRepository<PaymentRegistry
     @Query("SELECT COUNT(p) > 0 FROM PaymentRegistry p " +
             "WHERE p.productRegistry.clientId = :clientId AND p.expired = true")
     boolean existsExpiredPaymentsForClient(Long clientId);
+
+    Optional<PaymentRegistry> findFirstByProductRegistryClientIdAndExpiredIsFalseOrderByPaymendDateAsc(Long clientId);
 }
