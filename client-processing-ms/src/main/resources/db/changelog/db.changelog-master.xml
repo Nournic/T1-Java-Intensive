@@ -7,4 +7,5 @@
     <include file="db/changelog/changes/initial-schema.xml"/>
     <include file="db/changelog/changes/23-01-changelog.xml"/>
     <include file="db/changelog/changes/28-01-changelog.xml"/>
+    <include file="db/changelog/changes/02-01-changelog.xml"/>
 </databaseChangeLog>

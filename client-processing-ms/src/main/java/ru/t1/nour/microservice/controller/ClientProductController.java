@@ -9,6 +9,8 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.t1.nour.microservice.aop.annotation.HttpOutcomeRequestLog;
+import ru.t1.nour.microservice.aop.annotation.LogDatasourceError;
 import ru.t1.nour.microservice.model.dto.request.ClientProductCreateRequest;
 import ru.t1.nour.microservice.model.dto.request.ClientProductUpdateRequest;
 import ru.t1.nour.microservice.model.dto.response.ClientProductResponse;
@@ -26,6 +28,7 @@ public class ClientProductController {
 
     private final ObjectMapper objectMapper;
 
+    @HttpOutcomeRequestLog
     @GetMapping
     public PagedModel<ClientProductResponse> getAll(Pageable pageable) {
         Page<ClientProductResponse> clientProducts = clientProductService.findAll(pageable);

@@ -17,6 +17,7 @@ public class ClientRegistrationRequest {
 
     @NotBlank
     @Size(min = 8, max = 100)
+    @ToString.Exclude
     private String password;
 
     @NotBlank
