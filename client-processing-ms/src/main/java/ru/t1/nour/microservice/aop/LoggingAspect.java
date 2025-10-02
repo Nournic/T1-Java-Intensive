@@ -31,7 +31,7 @@ public class LoggingAspect {
 
     @AfterThrowing(pointcut = "logDataSourceError()", throwing = "ex")
     public void logAfterException(JoinPoint jp, RuntimeException ex){
-        CompletableFuture<SendResult<String, LogErrorEventDTO>> function = logEventProducer.sendLogEvent(
+        CompletableFuture<SendResult<String, Object>> function = logEventProducer.sendLogEvent(
                 "ERROR",
                 jp.getSignature().toShortString(),
                 jp.getArgs(),
@@ -41,7 +41,7 @@ public class LoggingAspect {
         function.whenComplete((result, exception)->{
             if(exception != null){
                 log.error("Failed to send log event to Kafka asynchronously. Reason: {}\n" +
-                        "Initiating fallback.", ex.getMessage());
+                        "Initiating fallback.", exception.getMessage());
 
                 String fallbackMessage = String.format(
                         "Signature: %s | Args: %s",
