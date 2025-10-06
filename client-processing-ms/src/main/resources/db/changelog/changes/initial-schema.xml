@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="1758529827175-1" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="client_products_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529827175-2" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="clients_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529827175-3" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="products_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529827175-4" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="users_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529827175-5" author="diman (generated)">
+        <createTable tableName="client_products">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_client_products"/>
+            </column>
+            <column name="client_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="open_date" type="DATETIME"/>
+            <column name="close_date" type="DATETIME"/>
+            <column name="status" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529827175-6" author="diman (generated)">
+        <createTable tableName="clients">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_clients"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="client_id" type="VARCHAR(255)"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="middle_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="date_of_birth" type="DATE"/>
+            <column name="document_type" type="VARCHAR(255)"/>
+            <column name="document_id" type="BIGINT"/>
+            <column name="document_prefix" type="VARCHAR(255)"/>
+            <column name="document_suffix" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529827175-7" author="diman (generated)">
+        <createTable tableName="products">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_products"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="key" type="VARCHAR(255)"/>
+            <column name="create_date" type="DATETIME"/>
+            <column name="product_id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529827175-8" author="diman (generated)">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="login" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(50)"/>
+            <column name="password" type="VARCHAR(120)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529827175-9" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="clients" constraintName="FK_CLIENTS_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1758529827175-10" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="client_products"
+                                 constraintName="FK_CLIENT_PRODUCTS_ON_CLIENT" referencedColumnNames="id"
+                                 referencedTableName="clients"/>
+    </changeSet>
+    <changeSet id="1758529827175-11" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="client_products"
+                                 constraintName="FK_CLIENT_PRODUCTS_ON_PRODUCT" referencedColumnNames="id"
+                                 referencedTableName="products"/>
+    </changeSet>
+</databaseChangeLog>

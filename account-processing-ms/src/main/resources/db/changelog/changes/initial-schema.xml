@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1758529991151-1" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="accounts_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529991151-2" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="cards_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529991151-3" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="payments_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529991151-4" author="diman (generated)">
+        <createSequence incrementBy="50" sequenceName="transactions_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1758529991151-5" author="diman (generated)">
+        <createTable tableName="accounts">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_accounts"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="DECIMAL(19, 2)"/>
+            <column name="interest_rate" type="DECIMAL(19, 2)"/>
+            <column name="is_recalc" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="card_exist" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529991151-6" author="diman (generated)">
+        <createTable tableName="cards">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cards"/>
+            </column>
+            <column name="card_id" type="BIGINT"/>
+            <column name="payment_system" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="timestamp" type="DATETIME"/>
+            <column name="account_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529991151-7" author="diman (generated)">
+        <createTable tableName="payments">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_payments"/>
+            </column>
+            <column name="payment_date" type="DATETIME"/>
+            <column name="amount" type="DECIMAL(19, 2)"/>
+            <column name="is_credit" type="BOOLEAN"/>
+            <column name="payed_at" type="DATETIME"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="account_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529991151-8" author="diman (generated)">
+        <createTable tableName="transactions">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transactions"/>
+            </column>
+            <column name="account_id" type="BIGINT"/>
+            <column name="card_id" type="BIGINT"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="amount" type="DECIMAL(19, 2)"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="timestamp" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1758529991151-9" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="cards" constraintName="FK_CARDS_ON_ACCOUNT"
+                                 referencedColumnNames="id" referencedTableName="accounts"/>
+    </changeSet>
+    <changeSet id="1758529991151-10" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="payments"
+                                 constraintName="FK_PAYMENTS_ON_ACCOUNT" referencedColumnNames="id"
+                                 referencedTableName="accounts"/>
+    </changeSet>
+    <changeSet id="1758529991151-11" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="transactions"
+                                 constraintName="FK_TRANSACTIONS_ON_ACCOUNT" referencedColumnNames="id"
+                                 referencedTableName="accounts"/>
+    </changeSet>
+    <changeSet id="1758529991151-12" author="diman (generated)">
+        <addForeignKeyConstraint baseColumnNames="card_id" baseTableName="transactions"
+                                 constraintName="FK_TRANSACTIONS_ON_CARD" referencedColumnNames="id"
+                                 referencedTableName="cards"/>
+    </changeSet>
+</databaseChangeLog>
