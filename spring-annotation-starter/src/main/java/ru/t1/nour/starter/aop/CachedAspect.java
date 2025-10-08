@@ -1,4 +1,4 @@
-package ru.t1.nour.microservice.aop;
+package ru.t1.nour.starter.aop;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,17 +7,15 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.stereotype.Component;
-import ru.t1.nour.microservice.aop.annotation.Cached;
+import ru.t1.nour.starter.aop.annotation.Cached;
 
 @Aspect
 @Slf4j
 @RequiredArgsConstructor
-@Component
 public class CachedAspect {
     private final CacheManager cacheManager;
 
-    @Around("@annotation(ru.t1.nour.microservice.aop.annotation.Cached)")
+    @Around("@annotation(ru.t1.nour.starter.aop.annotation.Cached)")
     public Object cache(ProceedingJoinPoint jp, Cached cachedAnnotation) throws Throwable {
         String cacheName = cachedAnnotation.cacheName();
         Cache cache = cacheManager.getCache(cacheName);

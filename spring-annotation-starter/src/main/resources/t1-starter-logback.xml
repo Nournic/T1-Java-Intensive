@@ -1,0 +1,19 @@
+<included>
+    <springProperty scope="context" name="DB_URL" source="spring.datasource.url"/>
+    <springProperty scope="context" name="DB_USER" source="spring.datasource.username"/>
+    <springProperty scope="context" name="DB_PASSWORD" source="spring.datasource.password"/>
+
+    <appender name="T1_STARTER_DB_FALLBACK" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>org.postgresql.Driver</driverClass>
+            <url>${DB_URL}</url>
+            <user>${DB_USER}</user>
+            <password>${DB_PASSWORD}</password>
+        </connectionSource>
+    </appender>
+
+    <logger name="ru.t1.nour.starter.kafka.LogEventProducer" level="ERROR" additivity="false">
+        <appender-ref ref="T1_STARTER_DB_FALLBACK"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+</included>

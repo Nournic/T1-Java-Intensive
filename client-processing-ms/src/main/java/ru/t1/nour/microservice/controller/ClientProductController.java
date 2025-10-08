@@ -9,14 +9,14 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.t1.nour.microservice.aop.annotation.HttpOutcomeRequestLog;
-import ru.t1.nour.microservice.aop.annotation.LogDatasourceError;
 import ru.t1.nour.microservice.model.dto.request.ClientProductCreateRequest;
 import ru.t1.nour.microservice.model.dto.request.ClientProductUpdateRequest;
 import ru.t1.nour.microservice.model.dto.response.ClientProductResponse;
 import ru.t1.nour.microservice.model.dto.response.MessageResponse;
 import ru.t1.nour.microservice.repository.ClientProductRepository;
 import ru.t1.nour.microservice.service.ClientProductService;
+import ru.t1.nour.starter.aop.annotation.HttpOutcomeRequestLog;
+import ru.t1.nour.starter.aop.annotation.LogDatasourceError;
 
 @RestController
 @RequestMapping("/api/client-products")
@@ -35,6 +35,7 @@ public class ClientProductController {
         return new PagedModel<>(clientProducts);
     }
 
+    @HttpOutcomeRequestLog
     @GetMapping("/{id}")
     public ResponseEntity<ClientProductResponse> get(@PathVariable Long id) {
         return ResponseEntity

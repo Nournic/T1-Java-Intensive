@@ -1,4 +1,4 @@
-package ru.t1.nour.microservice.service.impl.kafka;
+package ru.t1.nour.starter.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,34 +6,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import ru.t1.nour.microservice.model.dto.kafka.LogErrorEventDTO;
-import ru.t1.nour.microservice.model.dto.kafka.LogIncomeHttpEventDTO;
-import ru.t1.nour.microservice.model.dto.kafka.LogOutcomeHttpEventDTO;
+import ru.t1.nour.starter.kafka.dto.LogErrorEventDTO;
+import ru.t1.nour.starter.kafka.dto.LogIncomeHttpEventDTO;
+import ru.t1.nour.starter.kafka.dto.LogOutcomeHttpEventDTO;
 
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class LogEventProducer {
-    private static final String TOPIC_LOG = "service_logs";
-
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Value("${t1.app.name}")
-    private String APP_NAME;
+    private final String TOPIC_LOG;
+
+    private final String APP_NAME;
 
     private final ObjectMapper objectMapper;
 
-    public CompletableFuture<SendResult<String, Object>> sendLogEvent(String level, String signature, Object[] args, Throwable ex){
+    public void sendLogEvent(String level, String signature, Object[] args, Throwable ex){
         try{
             List<String> stringArgs = Arrays.stream(args)
                     .map(arg -> arg != null ? arg.toString() : null)
@@ -54,11 +50,22 @@ public class LogEventProducer {
             );
 
             record.headers().add("type", level.getBytes());
-            return kafkaTemplate.send(record);
+            kafkaTemplate.send(record).whenComplete((result, exception)->{
+                if(exception != null){
+                    log.error("Failed to send log event to Kafka asynchronously. Reason: {}\n" +
+                            "Initiating fallback.", exception.getMessage());
+
+                    String fallbackMessage = String.format(
+                            "Signature: %s | Args: %s",
+                            signature,
+                            Arrays.toString(args)
+                    );
+
+                    log.error(fallbackMessage, ex);
+                }
+            });
         } catch (Exception e) {
             log.error("Failed to send log event to Kafka", e);
-
-            return CompletableFuture.failedFuture(e);
         }
     }
 

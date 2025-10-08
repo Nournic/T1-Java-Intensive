@@ -55,6 +55,13 @@
       <version>1.6.0</version>
       <optional>true</optional>
     </dependency>
+
+    <dependency>
+      <groupId>ru.t1.nour</groupId>
+      <artifactId>spring-annotation-starter</artifactId>
+      <version>0.13</version>
+    </dependency>
+
   </dependencies>
 
   <build>
