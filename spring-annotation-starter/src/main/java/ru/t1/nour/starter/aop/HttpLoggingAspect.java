@@ -1,4 +1,4 @@
-package ru.t1.nour.microservice.aop;
+package ru.t1.nour.starter.aop;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,18 +12,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import ru.t1.nour.microservice.service.impl.kafka.LogEventProducer;
+import ru.t1.nour.starter.kafka.LogEventProducer;
 
-@Component
 @RequiredArgsConstructor
 @Aspect
 @Slf4j
 public class HttpLoggingAspect {
     private final LogEventProducer logEventProducer;
 
-    private static final Logger FALLBACK_LOGGER = LoggerFactory.getLogger("kafka-fallback");
-
-    @AfterReturning(pointcut = "@annotation(ru.t1.nour.microservice.aop.annotation.HttpOutcomeRequestLog)",
+    @AfterReturning(pointcut = "@annotation(ru.t1.nour.starter.aop.annotation.HttpOutcomeRequestLog)",
             returning = "result")
     public void logAfterHttpRequest(JoinPoint jp, Object result){
         String uri = "URI not available";
@@ -42,7 +39,7 @@ public class HttpLoggingAspect {
         );
     }
 
-    @Before("@annotation(ru.t1.nour.microservice.aop.annotation.HttpIncomeRequestLog)")
+    @Before("@annotation(ru.t1.nour.starter.aop.annotation.HttpIncomeRequestLog)")
     public void logBeforeHttpRequest(JoinPoint jp){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 

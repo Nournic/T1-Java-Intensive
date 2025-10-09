@@ -1,23 +1,4 @@
 <configuration>
-    <!-- Подключаем стандартные настройки Spring Boot -->
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <!-- Определяем наш новый аппендер, который будет писать в БД -->
-    <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
-        <!-- Указываем, какое подключение к БД использовать.
-             Этот DataSource уже настроен в Spring Boot! -->
-        <connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
-            <dataSource class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-                <driverClassName>org.postgresql.Driver</driverClassName>
-                <url>jdbc:postgresql://localhost:5433/${CLIENTS_DB_NAME}</url>
-                <username>${CLIENTS_DB_USER}</username>
-                <password>${CLIENTS_DB_PASSWORD}</password>
-            </dataSource>
-        </connectionSource>
-    </appender>
-
-    <!-- Создаем специальный, ИЗОЛИРОВАННЫЙ логгер для наших fallback-сообщений -->
-    <!-- additivity="false" КРИТИЧЕСКИ ВАЖНО! Это предотвращает дублирование логов в консоль -->
-    <logger name="kafka-fallback" level="ERROR" additivity="false">
-        <appender-ref ref="DB"/>
-    </logger>
+    <include resource="t1-starter-logback.xml"/>
 </configuration>
