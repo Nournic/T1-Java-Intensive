@@ -9,7 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import ru.t1.nour.microservice.service.impl.UserDetailsImpl;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -22,34 +27,39 @@ public class JwtUtils {
     @Value("${security.expiration}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    @Value("${t1.app.starter.app-name}")
+    private String APP_NAME;
 
+    public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(key(), SignatureAlgorithm.HS256)
+                .issuer(APP_NAME)
+                .subject((userPrincipal.getUsername()))
+                .issuedAt(java.util.Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plus(jwtExpirationMs, ChronoUnit.MILLIS)))
+                .signWith(key())
                 .compact();
     }
 
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
-    }
+    private SecretKey key() {return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));}
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key())
+        return parseJwt(token)
+                .getPayload().getSubject();
+    }
+
+    public Jws<Claims> parseJwt(String jwtString){
+        return Jwts.parser()
+                .verifyWith(key())
                 .build()
-                .parseClaimsJws(token)
-                .getBody().getSubject();
+                .parseSignedClaims(jwtString);
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key())
+            Jwts.parser()
+                    .verifyWith(key())
                     .build()
                     .parse(authToken);
             return true;
