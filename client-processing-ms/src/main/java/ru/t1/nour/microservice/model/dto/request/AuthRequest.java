@@ -1,15 +1,14 @@
 package ru.t1.nour.microservice.model.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class AuthRequest {
     private String username;
+
+    @ToString.Exclude
     private String password;
 }
