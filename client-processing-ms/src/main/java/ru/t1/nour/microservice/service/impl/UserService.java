@@ -16,7 +16,7 @@ import ru.t1.nour.microservice.model.dto.request.AuthRequest;
 import ru.t1.nour.microservice.model.dto.response.JwtResponse;
 import ru.t1.nour.microservice.repository.RoleRepository;
 import ru.t1.nour.microservice.repository.UserRepository;
-import ru.t1.nour.microservice.util.JwtUtils;
+import ru.t1.nour.security.jwt.JwtUtils;
 
 import java.util.Collections;
 import java.util.List;

@@ -22,8 +22,8 @@ public class TrustedKeyStore {
 
     @PostConstruct
     public void init(){
-        if(jwtProperties.getTrustedKeys() != null){
-            jwtProperties.getTrustedKeys().forEach((kid, str)->{
+        if(jwtProperties.getTrustedPublicKeys() != null){
+            jwtProperties.getTrustedPublicKeys().forEach((kid, str)->{
                 try{
                     publicKeyCache.put(kid, convertStringToPublicKey(str));
                 } catch (Exception e) {

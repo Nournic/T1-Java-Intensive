@@ -31,7 +31,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter(jwtUtils, userDetailsService);
+        return new AuthTokenFilter(jwtUtils);
     }
 
     @Bean
@@ -61,12 +61,12 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").anonymous()
+                        auth.requestMatchers("/auth/**").anonymous()
                                 .requestMatchers("/parse/**").permitAll()
                                 .requestMatchers("/parse").permitAll()
                                 .requestMatchers("/actuator/prometheus").anonymous()
                                 .requestMatchers("/actuator/*").anonymous()
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 );
 
         http.authenticationProvider(authenticationProvider());

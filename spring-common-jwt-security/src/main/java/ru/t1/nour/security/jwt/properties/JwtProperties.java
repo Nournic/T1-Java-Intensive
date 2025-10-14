@@ -17,5 +17,5 @@ public class JwtProperties {
 
     private long expirationMs;
 
-    private Map<String, String> trustedKeys;
+    private Map<String, String> trustedPublicKeys;
 }

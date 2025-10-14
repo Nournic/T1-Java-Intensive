@@ -8,12 +8,8 @@ import java.security.NoSuchAlgorithmException;
 
 @SpringBootApplication
 public class App {
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        //SpringApplication.run(App.class, args);
-
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(256);
-
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
     }
 
 
