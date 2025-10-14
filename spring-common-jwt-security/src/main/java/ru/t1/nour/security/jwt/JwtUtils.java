@@ -5,6 +5,8 @@ import io.jsonwebtoken.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.t1.nour.security.jwt.properties.JwtProperties;
 import ru.t1.nour.security.jwt.utils.PublicKeyLocator;
@@ -16,6 +18,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class JwtUtils {
@@ -53,16 +56,31 @@ public class JwtUtils {
                 .compact();
     }
 
+    public String generateJwtToken(UserDetails userDetails){
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", roles);
+
+        return generateJwtToken(claims, userDetails.getUsername());
+    }
+
     public Optional<Authentication> getAuthentication(String token) {
         try {
             Jws<Claims> jwsClaims = this.jwtParser.parseSignedClaims(token);
             Claims claims = jwsClaims.getPayload();
-
             String subject = claims.getSubject();
-            if (subject == null)
-                return Optional.empty();
 
-            return Optional.of(new UsernamePasswordAuthenticationToken(subject, null, Collections.emptyList()));
+            List<String> roles = claims.get("roles", List.class);
+            List<SimpleGrantedAuthority> authorities = Collections.emptyList();
+            if (roles != null)
+                authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+            return Optional.of(new UsernamePasswordAuthenticationToken(subject, null, authorities));
 
         } catch (ExpiredJwtException e) {
             log.warn("The token has expired: {}", e.getMessage());

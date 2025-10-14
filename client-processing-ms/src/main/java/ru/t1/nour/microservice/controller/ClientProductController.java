@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.nour.microservice.model.dto.request.ClientProductCreateRequest;
 import ru.t1.nour.microservice.model.dto.request.ClientProductUpdateRequest;
@@ -30,6 +31,7 @@ public class ClientProductController {
 
     @HttpOutcomeRequestLog
     @GetMapping
+    @PreAuthorize("hasAnyRole('GRAND_EMPLOYEE', 'MASTER')")
     public PagedModel<ClientProductResponse> getAll(Pageable pageable) {
         Page<ClientProductResponse> clientProducts = clientProductService.findAll(pageable);
         return new PagedModel<>(clientProducts);
@@ -37,6 +39,7 @@ public class ClientProductController {
 
     @HttpOutcomeRequestLog
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('CURRENT_CLIENT')")
     public ResponseEntity<ClientProductResponse> get(@PathVariable Long id) {
         return ResponseEntity
                 .ok()
@@ -44,6 +47,7 @@ public class ClientProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('MASTER')")
     public ResponseEntity<ClientProductResponse> create(@Valid @RequestBody ClientProductCreateRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -51,6 +55,7 @@ public class ClientProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('MASTER', 'GRAND_EMPLOYEE')")
     public ResponseEntity<ClientProductResponse> update(@PathVariable Long id, @Valid @RequestBody ClientProductUpdateRequest request) {
         return ResponseEntity
                 .ok()
@@ -58,6 +63,7 @@ public class ClientProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('MASTER', 'GRAND_EMPLOYEE')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         clientProductService.delete(id);
         return ResponseEntity

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class ClientController {
     }
 
     @GetMapping("/clients/{id}/info")
+    @PreAuthorize("hasRole('CURRENT_CLIENT')")
     public ResponseEntity<ClientInfoResponse> getInfo(@PathVariable long id){
         ClientInfoResponse response = clientService.findInfoById(id);
 

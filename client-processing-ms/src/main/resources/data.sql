@@ -47,3 +47,21 @@ INSERT INTO client_products (id, client_id, product_id, open_date, close_date, s
 (309, 108, 202, '2024-04-10T13:00:00', NULL, 'BLOCKED'),
 (310, 109, 201, '2024-05-01T11:20:00', NULL, 'ACTIVE'),
 (311, 110, 203, '2024-05-15T10:00:00', NULL, 'ACTIVE');
+
+INSERT INTO roles (id, role_name) values
+(1, 'ROLE_CURRENT_CLIENT'),
+(2, 'ROLE_GRAND_EMPLOYEE'),
+(3, 'ROLE_MASTER'),
+(4, 'ROLE_BLOCKED_CLIENT';
+
+INSERT INTO users_roles (user_id, roles_id) values
+(1, 3),
+(2, 2),
+(3, 1),
+(4, 1),
+(5, 1),
+(6, 1),
+(7, 1),
+(8, 1),
+(9, 1),
+(10, 1);

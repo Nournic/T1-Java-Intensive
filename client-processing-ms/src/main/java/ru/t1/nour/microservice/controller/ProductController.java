@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.t1.nour.microservice.model.Product;
@@ -32,12 +33,14 @@ public class ProductController {
     private final ObjectMapper objectMapper;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('GRAND_EMPLOYEE', 'MASTER')")
     public PagedModel<ProductResponse> getAll(Pageable pageable) {
         Page<ProductResponse> products = productService.findAll(pageable);
         return new PagedModel<>(products);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('CURRENT_CLIENT')")
     public Product getOne(@PathVariable Long id) {
         Optional<Product> productOptional = productRepository.findById(id);
         return productOptional.orElseThrow(() ->
@@ -45,11 +48,13 @@ public class ProductController {
     }
 
     @GetMapping("/by-ids")
+    @PreAuthorize("hasAnyRole('GRAND_EMPLOYEE', 'MASTER')")
     public List<Product> getMany(@RequestParam List<Long> ids) {
         return productRepository.findAllById(ids);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('CURRENT_CLIENT')")
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductCreateRequest request) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -58,6 +63,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('GRAND_EMPLOYEE', 'MASTER')")
     public ResponseEntity<ProductResponse> update(@PathVariable Long id, @Valid @RequestBody ProductUpdateRequest request) {
         return ResponseEntity.ok().body(
                 productService.update(id, request)
@@ -65,6 +71,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MASTER')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         productService.delete(id);
 
