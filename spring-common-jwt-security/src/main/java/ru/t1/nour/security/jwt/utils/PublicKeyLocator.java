@@ -1,14 +1,12 @@
-package ru.t1.nour.microservice.util;
+package ru.t1.nour.security.jwt.utils;
 
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.LocatorAdapter;
 import io.jsonwebtoken.security.UnsupportedKeyException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.security.Key;
 
-@Component
 @RequiredArgsConstructor
 public class PublicKeyLocator extends LocatorAdapter<Key> {
 

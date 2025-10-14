@@ -1,9 +1,9 @@
-package ru.t1.nour.microservice.util;
+package ru.t1.nour.security.jwt.utils;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import ru.t1.nour.security.jwt.properties.JwtProperties;
 
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
 @RequiredArgsConstructor
 @Slf4j
 public class TrustedKeyStore {
@@ -40,12 +39,7 @@ public class TrustedKeyStore {
     }
 
     private PublicKey convertStringToPublicKey(String keyStr) throws Exception {
-        String publicKeyPEM = keyStr
-                .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replaceAll(System.lineSeparator(), "")
-                .replace("-----END PUBLIC KEY-----", "");
-
-        byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
+        byte[] encoded = Base64.getDecoder().decode(keyStr);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
         return keyFactory.generatePublic(keySpec);

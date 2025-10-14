@@ -77,25 +77,6 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
 
-
-
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-api</artifactId>
-      <version>0.13.0</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-impl</artifactId>
-      <version>0.13.0</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-jackson</artifactId>
-      <version>0.13.0</version>
-      <scope>runtime</scope>
-    </dependency>
     <dependency>
       <groupId>org.springframework.kafka</groupId>
       <artifactId>spring-kafka</artifactId>
@@ -106,6 +87,7 @@
     <module>account-processing-ms</module>
     <module>credit-processing-ms</module>
     <module>spring-annotation-starter</module>
+      <module>spring-common-jwt-security</module>
   </modules>
 
   <build>

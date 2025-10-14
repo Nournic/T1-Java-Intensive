@@ -1,4 +1,5 @@
-package ru.t1.nour.microservice.util;
+package ru.t1.nour.security.jwt;
+
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,10 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.t1.nour.microservice.service.impl.UserDetailsServiceImpl;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -23,7 +23,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
