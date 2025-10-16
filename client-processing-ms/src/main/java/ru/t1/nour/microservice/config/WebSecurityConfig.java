@@ -10,14 +10,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.t1.nour.microservice.service.impl.UserDetailsServiceImpl;
-import ru.t1.nour.microservice.util.AuthEntryPointJwt;
-import ru.t1.nour.microservice.util.AuthTokenFilter;
-import ru.t1.nour.microservice.util.JwtUtils;
+import ru.t1.nour.security.jwt.AuthEntryPointJwt;
+import ru.t1.nour.security.jwt.AuthTokenFilter;
+import ru.t1.nour.security.jwt.JwtUtils;
+
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +31,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter(jwtUtils, userDetailsService);
+        return new AuthTokenFilter(jwtUtils);
     }
 
     @Bean
@@ -51,7 +52,7 @@ public class WebSecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
@@ -60,12 +61,12 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").anonymous()
+                        auth.requestMatchers("/auth/**").anonymous()
                                 .requestMatchers("/parse/**").permitAll()
                                 .requestMatchers("/parse").permitAll()
                                 .requestMatchers("/actuator/prometheus").anonymous()
                                 .requestMatchers("/actuator/*").anonymous()
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 );
 
         http.authenticationProvider(authenticationProvider());

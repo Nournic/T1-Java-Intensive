@@ -8,17 +8,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.t1.nour.microservice.model.dto.request.LoginRequest;
+import ru.t1.nour.microservice.model.dto.request.AuthRequest;
 import ru.t1.nour.microservice.model.dto.response.JwtResponse;
 import ru.t1.nour.microservice.repository.RoleRepository;
 import ru.t1.nour.microservice.repository.UserRepository;
-import ru.t1.nour.microservice.util.JwtUtils;
+import ru.t1.nour.security.jwt.JwtUtils;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -31,28 +32,33 @@ public class UserService {
 
     private final JwtUtils jwtUtils;
 
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
+
     private PasswordEncoder encoder;
 
-    public ResponseEntity<?> authorize(@Valid @RequestBody LoginRequest loginRequest){
-        Authentication authentication = authenticationManager.authenticate(
+    public ResponseEntity<?> authorize(@Valid @RequestBody AuthRequest authRequest){
+        Authentication authentication = this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(), loginRequest.getPassword()
+                        authRequest.getUsername(), authRequest.getPassword()
                 )
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwtToken = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        final UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(authRequest.getUsername());
+
+        String jwtToken = jwtUtils.generateJwtToken(
+                Collections.emptyMap(),
+                authRequest.getUsername());
+
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+                .toList();
 
-        return ResponseEntity.ok(new JwtResponse(jwtToken,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+        return ResponseEntity.ok()
+                .body(JwtResponse.builder()
+                        .token(jwtToken)
+                        .build());
 
     }
 

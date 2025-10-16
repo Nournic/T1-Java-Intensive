@@ -63,11 +63,6 @@
       <version>${mapstruct.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-api</artifactId>
-      <version>0.11.5</version>
-    </dependency>
-    <dependency>
       <groupId>ch.qos.logback.db</groupId>
       <artifactId>logback-classic-db</artifactId>
       <version>1.2.11.1</version>
@@ -77,21 +72,6 @@
       <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
 
-
-
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-impl</artifactId>
-      <version>0.11.5</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-jackson</artifactId>
-      <version>0.11.5</version>
-      <scope>runtime</scope>
-    </dependency>
     <dependency>
       <groupId>org.springframework.kafka</groupId>
       <artifactId>spring-kafka</artifactId>
@@ -102,6 +82,7 @@
     <module>account-processing-ms</module>
     <module>credit-processing-ms</module>
     <module>spring-annotation-starter</module>
+      <module>spring-common-jwt-security</module>
   </modules>
 
   <build>

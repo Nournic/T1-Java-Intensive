@@ -62,6 +62,12 @@
       <version>0.13</version>
     </dependency>
 
+    <dependency>
+      <groupId>ru.t1.nour</groupId>
+      <artifactId>spring-common-jwt-security</artifactId>
+      <version>0.6</version>
+    </dependency>
+
   </dependencies>
 
   <build>
