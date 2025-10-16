@@ -52,7 +52,7 @@ INSERT INTO roles (id, role_name) values
 (1, 'ROLE_CURRENT_CLIENT'),
 (2, 'ROLE_GRAND_EMPLOYEE'),
 (3, 'ROLE_MASTER'),
-(4, 'ROLE_BLOCKED_CLIENT';
+(4, 'ROLE_BLOCKED_CLIENT');
 
 INSERT INTO users_roles (user_id, roles_id) values
 (1, 3),
