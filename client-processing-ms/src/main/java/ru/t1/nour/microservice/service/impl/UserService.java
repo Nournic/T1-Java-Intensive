@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     private final UserRepository userRepository;
 
@@ -34,7 +34,7 @@ public class UserService {
 
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    private PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
     public ResponseEntity<?> authorize(@Valid @RequestBody AuthRequest authRequest){
         Authentication authentication = this.authenticationManager.authenticate(
