@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
                 () -> new RuntimeException("Product with that ID is not found"));
 
         foundProduct.setName(request.getName());
-        foundProduct.setKey(request.getProductKey());
+        foundProduct.setProductKey(request.getProductKey());
 
         Product savedProduct = productRepository.save(foundProduct);
 

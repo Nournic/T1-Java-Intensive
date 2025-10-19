@@ -58,13 +58,14 @@ public class ClientServiceImpl implements ClientService {
             throw new RuntimeException("Login is already taken!");
 
         if(userRepository.existsByEmail(request.getEmail()))
-            throw new RuntimeException("Login is already taken!");
+            throw new RuntimeException("Email is already taken!");
 
         Client newClient = Client.builder()
                 .firstName(request.getFirstName())
                 .middleName(request.getMiddleName())
                 .lastName(request.getLastName())
                 .dateOfBirth(request.getDateOfBirth())
+                .documentType(request.getDocumentType())
                 .documentPrefix(request.getDocumentPrefix())
                 .documentSuffix(request.getDocumentSuffix())
                 .documentId(request.getDocumentId())
@@ -75,7 +76,7 @@ public class ClientServiceImpl implements ClientService {
         newUser.setPassword(encoder.encode(request.getPassword()));
         newUser.setEmail(request.getEmail());
 
-        Role userRole = roleRepository.findByName(RoleEnum.USER_ROLE)
+        Role userRole = roleRepository.findByName(RoleEnum.ROLE_CURRENT_CLIENT)
                 .orElseThrow(()-> new RuntimeException("Role USER_ROLE is not exists"));
 
         newUser.setRoles(Set.of(userRole));

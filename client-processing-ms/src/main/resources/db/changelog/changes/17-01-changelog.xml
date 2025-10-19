@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd">
+
+    <changeSet id="1760686224535-1" author="diman">
+        <renameColumn tableName="products" oldColumnName="key" newColumnName="productKey"/>
+    </changeSet>
+    <changeSet id="1760686652707-1" author="diman">
+        <renameColumn tableName="products" oldColumnName="productKey" newColumnName="product_key"/>
+    </changeSet>
+    <changeSet id="1760686720420-1" author="diman">
+        <createSequence sequenceName="CLIENT_ID_SEQ" startValue="1" incrementBy="1" cacheSize="20"/>
+    </changeSet>
+
+
+</databaseChangeLog>

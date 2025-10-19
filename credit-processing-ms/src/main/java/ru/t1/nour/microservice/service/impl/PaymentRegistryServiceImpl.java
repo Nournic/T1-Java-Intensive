@@ -161,6 +161,7 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
             } else {
                 log.info("Standard monthly payment processed for paymentId: {}", paymentRegistry.getId());
                 paymentRegistry.setPaymentDate(LocalDateTime.now());
+                paymentRegistryRepository.save(paymentRegistry);
             }
         }
     }

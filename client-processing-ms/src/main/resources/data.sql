@@ -1,19 +1,21 @@
 delete from client_products;
+delete from users_roles;
 delete from clients;
 delete from users;
 delete from products;
+delete from roles;
 
 INSERT INTO users (id, login, email, password) VALUES
-(1, 'valerie', 'valerie@example.com', '$2a$10$V95tWiUgmaS31.QIR1tJtOEQttVSRbyN1egFuDhKB6U1EtiuQxEXy'),
-(2, 'mark', 'mark@example.com', '$2a$10$slsu4tZZVfRHW5DZOINkkun0g6UX09fU0.CPda52zvEyYBWLPeLhu'),
-(3, 'sandra', 'sandra@example.com', '$2a$10$DZelDQ4.WzXRjFZCpXvtcuPBeavy.FKxo5gKPZkHXff.U1gv07MxC'),
-(4, 'hudson', 'hudson@example.com', '$2a$10$DBhS6ubdJS788htu4jIiBOpbCGUnGhSu/mXQIIdlLd2VnwGKy7n16'),
-(5, 'hill', 'hill@example.com', '$2a$10$BwPLJ.Xqi2PAWuyOKTAZOOl7eyxPKuUiPBtutfFZBOPiHkmot0fra'),
-(6, 'dorothy', 'dorothy@example.com', '$2a$10$70bBo.3e0P2VkboOrR1Z3uQxwZLipA1Hg8doX4S53qVS5rj0J76CW'),
-(7, 'marie', 'marie@example.com', '$2a$10$dJkf05HEyga3nPUi1PawQuN4.NchMOqIAfDKKPNIU96ZUQt9EJ6ta'),
-(8, 'bishop', 'bishop@example.com', '$2a$10$oHXsR.qmZKKFJD/PgRNMoua3PoGr34VYhWKT2WlRTdh.E79NvHpay'),
-(9, 'elliott', 'elliott@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92sV3llgiV2UpjOud3yGm'),
-(10, 'john', 'john@example.com', '$2a$10$gaQt4fIlkQ3Og3X6AxBp0eT8EodrnBIMfCLvYLqNhWiuIdldnlBPa');
+(1, 'valerie', 'valerie@example.com', '{bcrypt}$2a$10$bFCRS8TMMpnkfyUisBAukuoH.JMVXXQrObUCcUQjjKucL8ndB5viW'),
+(2, 'mark', 'mark@example.com', '{bcrypt}$2a$10$slsu4tZZVfRHW5DZOINkkun0g6UX09fU0.CPda52zvEyYBWLPeLhu'),
+(3, 'sandra', 'sandra@example.com', '{bcrypt}$2a$10$DZelDQ4.WzXRjFZCpXvtcuPBeavy.FKxo5gKPZkHXff.U1gv07MxC'),
+(4, 'hudson', 'hudson@example.com', '{bcrypt}$2a$10$DBhS6ubdJS788htu4jIiBOpbCGUnGhSu/mXQIIdlLd2VnwGKy7n16'),
+(5, 'hill', 'hill@example.com', '{bcrypt}$2a$10$BwPLJ.Xqi2PAWuyOKTAZOOl7eyxPKuUiPBtutfFZBOPiHkmot0fra'),
+(6, 'dorothy', 'dorothy@example.com', '{bcrypt}$2a$10$70bBo.3e0P2VkboOrR1Z3uQxwZLipA1Hg8doX4S53qVS5rj0J76CW'),
+(7, 'marie', 'marie@example.com', '{bcrypt}$2a$10$dJkf05HEyga3nPUi1PawQuN4.NchMOqIAfDKKPNIU96ZUQt9EJ6ta'),
+(8, 'bishop', 'bishop@example.com', '{bcrypt}$2a$10$oHXsR.qmZKKFJD/PgRNMoua3PoGr34VYhWKT2WlRTdh.E79NvHpay'),
+(9, 'elliott', 'elliott@example.com', '{bcrypt}$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92sV3llgiV2UpjOud3yGm'),
+(10, 'john', 'john@example.com', '{bcrypt}$2a$10$gaQt4fIlkQ3Og3X6AxBp0eT8EodrnBIMfCLvYLqNhWiuIdldnlBPa');
 
 INSERT INTO clients (id, client_id, user_id, first_name, middle_name, last_name, date_of_birth, document_type, document_id, document_prefix, document_suffix) VALUES
 (101, '770100000001', 1, 'Valerie', 'Anne', 'Williams', '1992-03-15', 'PASSPORT', '111222', '4510', NULL),
@@ -27,7 +29,7 @@ INSERT INTO clients (id, client_id, user_id, first_name, middle_name, last_name,
 (109, '770100000009', 9, 'Elliott', 'Robert', 'Taylor', '2001-08-18', 'PASSPORT', '999000', '4605', NULL),
 (110, '770100000010', 10, 'John', 'Michael', 'Smith', '1990-10-05', 'PASSPORT', '123789', '4511', NULL);
 
-INSERT INTO products (id, name, key, create_date, product_id) VALUES
+INSERT INTO products (id, name, product_key, create_date, product_id) VALUES
 (201, 'Дебетовая карта "Классика"', 'DC', '2023-01-10T10:00:00', 'DC201'),
 (202, 'Кредитная карта "Платинум"', 'CC', '2023-01-15T11:00:00', 'CC202'),
 (203, 'Накопительный счет "Капитал"', 'NS', '2023-02-01T09:00:00', 'NS203'),
@@ -52,10 +54,11 @@ INSERT INTO roles (id, role_name) values
 (1, 'ROLE_CURRENT_CLIENT'),
 (2, 'ROLE_GRAND_EMPLOYEE'),
 (3, 'ROLE_MASTER'),
-(4, 'ROLE_BLOCKED_CLIENT';
+(4, 'ROLE_BLOCKED_CLIENT');
 
 INSERT INTO users_roles (user_id, roles_id) values
 (1, 3),
+(1, 1),
 (2, 2),
 (3, 1),
 (4, 1),
