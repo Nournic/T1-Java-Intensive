@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.t1.nour.microservice.service.impl.UserDetailsServiceImpl;
-import ru.t1.nour.security.jwt.AuthAccessDeniesHandler;
+import ru.t1.nour.security.jwt.AuthAccessDeniedHandler;
 import ru.t1.nour.security.jwt.AuthEntryPointJwt;
 import ru.t1.nour.security.jwt.AuthTokenFilter;
 import ru.t1.nour.security.jwt.JwtUtils;
@@ -29,7 +29,7 @@ public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtils jwtUtils;
     private final AuthEntryPointJwt unauthorizedHandler;
-    private final AuthAccessDeniesHandler accessDeniesHandler;
+    private final AuthAccessDeniedHandler accessDeniesHandler;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {

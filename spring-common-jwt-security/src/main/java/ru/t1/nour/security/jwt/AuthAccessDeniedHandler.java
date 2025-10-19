@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuthAccessDeniesHandler implements AccessDeniedHandler {
+public class AuthAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,

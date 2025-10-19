@@ -8,6 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 import ru.t1.nour.microservice.model.dto.kafka.TransactionEventDTO;
 
+import java.util.UUID;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -25,11 +27,14 @@ public class KafkaEventProducerTest {
     void should_sendEventToCorrectTopic() {
         // ARRANGE
         var testEvent = new TransactionEventDTO();
+        UUID uuid = UUID.randomUUID();
+        testEvent.setTransactionId(uuid);
+        String key = testEvent.getTransactionId().toString();
 
         // ACT
         kafkaEventProducer.sendTransaction(testEvent);
 
         // ASSERT
-        verify(kafkaTemplate, times(1)).send(TOPIC_CLIENT_TRANSACTION, testEvent);
+        verify(kafkaTemplate, times(1)).send(TOPIC_CLIENT_TRANSACTION, key, testEvent);
     }
 }

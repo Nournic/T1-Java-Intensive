@@ -93,7 +93,7 @@ public class TransactionServiceImplTest {
         // --- ARRANGE ---
         when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
         when(accountRepository.save(any(Account.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(cardRepository.findById(card.getId())).thenReturn(Optional.of(card));
+        when(cardRepository.findById(card.getCardId())).thenReturn(Optional.of(card));
         // Имитируем, что save() возвращает свой аргумент
         when(transactionRepository.save(any(Transaction.class))).thenAnswer(inv -> inv.getArgument(0));
         // Антифрод-проверка проходит (транзакций меньше лимита)
@@ -120,7 +120,7 @@ public class TransactionServiceImplTest {
         // --- ARRANGE ---
         card.setStatus(CardStatus.BLOCKED); // Карта заблокирована
         when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
-        when(cardRepository.findById(card.getId())).thenReturn(Optional.of(card));
+        when(cardRepository.findById(card.getCardId())).thenReturn(Optional.of(card));
         when(transactionRepository.save(any(Transaction.class))).thenAnswer(inv -> inv.getArgument(0));
 
         // --- ACT ---

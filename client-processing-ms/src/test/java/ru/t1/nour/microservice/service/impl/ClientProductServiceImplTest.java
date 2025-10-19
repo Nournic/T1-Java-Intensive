@@ -1,5 +1,7 @@
 package ru.t1.nour.microservice.service.impl;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -52,6 +54,12 @@ public class ClientProductServiceImplTest {
     private ProductEventProducer productEventProducer;
 
     @Mock
+    private MeterRegistry meterRegistry;
+
+    @Mock
+    private Counter openedProductsCounter;
+
+    @Mock
     private ClientProductMapper mapper;
 
     @InjectMocks
@@ -91,6 +99,7 @@ public class ClientProductServiceImplTest {
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         when(clientProductRepository.save(any(ClientProduct.class))).thenReturn(savedClientProduct);
         when(mapper.toClientProductResponse(savedClientProduct)).thenReturn(expectedResponse);
+        when(meterRegistry.counter(any(), any(), any())).thenReturn(openedProductsCounter);
 
         // --- ACT (Действие) ---
         ClientProductResponse actualResponse = clientProductService.create(request);
@@ -325,6 +334,7 @@ public class ClientProductServiceImplTest {
         // 5. "Обучаем" остальные моки
         when(clientProductRepository.findById(existingId)).thenReturn(Optional.of(originalProduct));
         when(mapper.toClientProductResponse(any(ClientProduct.class))).thenReturn(expectedResponse);
+        when(meterRegistry.counter(any(), any(), any())).thenReturn(openedProductsCounter);
 
         // --- ACT (Действие) ---
         ClientProductResponse actualResponse = clientProductService.update(existingId, updateRequest);
@@ -397,6 +407,8 @@ public class ClientProductServiceImplTest {
 
         // 2. "Обучаем" мок findById
         when(clientProductRepository.findById(existingId)).thenReturn(Optional.of(productToDelete));
+        when(meterRegistry.counter(any(), any(), any())).thenReturn(openedProductsCounter);
+
 
         // 3. Для void-методов deleteById и sendProductEvent нам не нужно настраивать .thenReturn()
         // Mockito по умолчанию выполнит их "впустую".

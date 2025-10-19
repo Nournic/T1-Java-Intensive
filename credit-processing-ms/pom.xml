@@ -37,16 +37,23 @@
     <dependency>
       <groupId>ru.t1.nour</groupId>
       <artifactId>spring-common-jwt-security</artifactId>
-      <version>0.7</version>
-    </dependency>
-    <dependency>
-      <groupId>ru.t1.nour</groupId>
-      <artifactId>spring-common-jwt-security</artifactId>
-      <version>0.6</version>
+      <version>0.8</version>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>mockwebserver</artifactId>
+      <version>5.2.1</version>
       <scope>test</scope>
     </dependency>
 
