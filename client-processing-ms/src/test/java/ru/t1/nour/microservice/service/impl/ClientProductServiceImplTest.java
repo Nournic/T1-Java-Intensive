@@ -1,6 +1,5 @@
 package ru.t1.nour.microservice.service.impl;
 
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -73,7 +72,7 @@ public class ClientProductServiceImplTest {
         Product product = new Product();
         ReflectionTestUtils.setField(product, "id", productId);
         ProductKey productKey = ProductKey.PC;
-        product.setKey(productKey);
+        product.setProductKey(productKey);
 
         // 3. Сущность, которая "сохранится"
         ClientProduct savedClientProduct = new ClientProduct();
@@ -305,7 +304,7 @@ public class ClientProductServiceImplTest {
 
         var mockProduct = new Product();
         ReflectionTestUtils.setField(mockProduct, "id", productId);
-        mockProduct.setKey(mockProductKey);
+        mockProduct.setProductKey(mockProductKey);
 
         // Создаем основной объект, который "найдет" репозиторий
         var originalProduct = new ClientProduct();
@@ -388,7 +387,7 @@ public class ClientProductServiceImplTest {
         var mockProductKey = ProductKey.CC;
         var mockProduct = new Product();
         ReflectionTestUtils.setField(mockProduct, "id", 20L);
-        mockProduct.setKey(mockProductKey);
+        mockProduct.setProductKey(mockProductKey);
 
         var productToDelete = new ClientProduct();
         ReflectionTestUtils.setField(productToDelete, "id", existingId);

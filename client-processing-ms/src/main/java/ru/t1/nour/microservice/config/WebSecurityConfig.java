@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.t1.nour.microservice.service.impl.UserDetailsServiceImpl;
+import ru.t1.nour.security.jwt.AuthAccessDeniesHandler;
 import ru.t1.nour.security.jwt.AuthEntryPointJwt;
 import ru.t1.nour.security.jwt.AuthTokenFilter;
 import ru.t1.nour.security.jwt.JwtUtils;
@@ -28,6 +29,7 @@ public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtils jwtUtils;
     private final AuthEntryPointJwt unauthorizedHandler;
+    private final AuthAccessDeniesHandler accessDeniesHandler;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -58,14 +60,17 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler)
+                        .accessDeniedHandler(accessDeniesHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/auth/**").anonymous()
+                                .requestMatchers("/api/auth/login").anonymous()
+                                .requestMatchers("/clients").anonymous()
                                 .requestMatchers("/parse/**").permitAll()
                                 .requestMatchers("/parse").permitAll()
-                                .requestMatchers("/actuator/prometheus").anonymous()
-                                .requestMatchers("/actuator/*").anonymous()
+                                .requestMatchers("/actuator/prometheus").permitAll()
+                                .requestMatchers("/actuator/*").permitAll()
                                 .anyRequest().authenticated()
                 );
 

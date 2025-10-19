@@ -21,8 +21,8 @@ public class Product extends AbstractPersistable<Long> {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "key", nullable = false)
-    private ProductKey key;
+    @Column(name = "productKey", nullable = false)
+    private ProductKey productKey;
 
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
@@ -30,9 +30,9 @@ public class Product extends AbstractPersistable<Long> {
     @Column(name = "product_id", nullable = false)
     private String productId;
 
-    @PostPersist
+    @PrePersist
     public void generateProductId(){
         if(this.productId == null)
-            this.productId = this.key.getValue() + this.getId();
+            this.productId = this.productKey.getValue() + this.getId();
     }
 }

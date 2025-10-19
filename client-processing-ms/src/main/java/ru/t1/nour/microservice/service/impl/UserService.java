@@ -19,7 +19,9 @@ import ru.t1.nour.microservice.repository.UserRepository;
 import ru.t1.nour.security.jwt.JwtUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -46,14 +48,15 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(authRequest.getUsername());
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList();
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", roles);
 
         String jwtToken = jwtUtils.generateJwtToken(
-                Collections.emptyMap(),
+                claims,
                 authRequest.getUsername());
-
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
 
         return ResponseEntity.ok()
                 .body(JwtResponse.builder()

@@ -34,11 +34,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>ru.t1.nour</groupId>
-      <artifactId>spring-common-jwt-security</artifactId>
-      <version>0.6</version>
-    </dependency>
-    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
@@ -57,6 +52,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ru.t1.nour</groupId>
+      <artifactId>spring-common-jwt-security</artifactId>
+      <version>0.7</version>
     </dependency>
   </dependencies>
 

@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.test.util.ReflectionTestUtils;
 import ru.t1.nour.microservice.mapper.ProductMapper;
 import ru.t1.nour.microservice.model.Product;
@@ -154,13 +153,13 @@ public class ProductServiceImplTest {
         Product originalProduct = new Product();
         ReflectionTestUtils.setField(originalProduct, "id", id);
         originalProduct.setName("Old Name");
-        originalProduct.setKey(ProductKey.AC);
+        originalProduct.setProductKey(ProductKey.AC);
 
         // 3. "Новый" объект
         Product newProduct = new Product();
         ReflectionTestUtils.setField(newProduct, "id", id);
         newProduct.setName("New Name");
-        newProduct.setKey(ProductKey.CC);
+        newProduct.setProductKey(ProductKey.CC);
 
         // 4. DTO, который вернет маппер
         ProductResponse expectedDto = new ProductResponse();
@@ -200,7 +199,7 @@ public class ProductServiceImplTest {
         // И проверяем его состояние в момент перед сохранением
         assertThat(capturedProduct.getId()).isEqualTo(id);
         assertThat(capturedProduct.getName()).isEqualTo("New Name");
-        assertThat(capturedProduct.getKey()).isEqualTo(ProductKey.CC);
+        assertThat(capturedProduct.getProductKey()).isEqualTo(ProductKey.CC);
     }
 
     @Test
@@ -237,13 +236,13 @@ public class ProductServiceImplTest {
         // 2. Сущность, которую вернет маппер
         Product productToSave = new Product();
         productToSave.setName(productName);
-        productToSave.setKey(productKey);
+        productToSave.setProductKey(productKey);
 
         // 3. Сущность, которую якобы вернет репозиторий ПОСЛЕ сохранения
         Product savedProduct = new Product();
         ReflectionTestUtils.setField(savedProduct, "id", id);
         savedProduct.setName(productName);
-        savedProduct.setKey(productKey);
+        savedProduct.setProductKey(productKey);
 
         // 4. Финальный DTO, который вернет маппер из сохраненной сущности
         ProductResponse expectedDto = new ProductResponse();

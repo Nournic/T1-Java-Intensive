@@ -34,8 +34,18 @@
 
   <dependencies>
     <dependency>
+      <groupId>ru.t1.nour</groupId>
+      <artifactId>spring-common-jwt-security</artifactId>
+      <version>0.7</version>
+    </dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
     <!-- Optionally: parameterized tests support -->
@@ -63,11 +73,14 @@
     </dependency>
 
     <dependency>
-      <groupId>ru.t1.nour</groupId>
-      <artifactId>spring-common-jwt-security</artifactId>
-      <version>0.6</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
 
   <build>

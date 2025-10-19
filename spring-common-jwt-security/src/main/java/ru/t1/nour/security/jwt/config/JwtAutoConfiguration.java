@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.t1.nour.security.jwt.AuthAccessDeniesHandler;
 import ru.t1.nour.security.jwt.AuthEntryPointJwt;
 import ru.t1.nour.security.jwt.JwtUtils;
 import ru.t1.nour.security.jwt.properties.JwtProperties;
@@ -36,5 +37,11 @@ public class JwtAutoConfiguration {
     @ConditionalOnMissingBean
     public AuthEntryPointJwt authEntryPointJwt() {
         return new AuthEntryPointJwt();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public AuthAccessDeniesHandler accessDeniedHandler(){
+        return new AuthAccessDeniesHandler();
     }
 }

@@ -94,7 +94,7 @@ public class ClientServiceImplTest {
         request.setDocumentType(DocumentType.PASSPORT);
         request.setDocumentId("123456");
 
-        var userRole = new Role(RoleEnum.USER_ROLE);
+        var userRole = new Role(RoleEnum.ROLE_CURRENT_CLIENT);
         var savedUser = new User();
         ReflectionTestUtils.setField(savedUser, "id", 100L);
         savedUser.setLogin(request.getLogin());
@@ -107,7 +107,7 @@ public class ClientServiceImplTest {
         when(clientRepository.existsByDocumentTypeAndDocumentId(any(), any())).thenReturn(false);
         when(userRepository.existsByLogin(anyString())).thenReturn(false);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
-        when(roleRepository.findByName(RoleEnum.USER_ROLE)).thenReturn(Optional.of(userRole));
+        when(roleRepository.findByName(RoleEnum.ROLE_CURRENT_CLIENT)).thenReturn(Optional.of(userRole));
         when(encoder.encode(request.getPassword())).thenReturn("hashed_password");
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
         when(clientIdGenerationService.generateNext()).thenReturn(generatedClientId);
@@ -197,7 +197,7 @@ public class ClientServiceImplTest {
         when(userRepository.existsByLogin(any())).thenReturn(false);
         when(userRepository.existsByEmail(any())).thenReturn(false);
 
-        when(roleRepository.findByName(RoleEnum.USER_ROLE)).thenReturn(Optional.empty());
+        when(roleRepository.findByName(RoleEnum.ROLE_CURRENT_CLIENT)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> clientService.registerClient(request))
                 .isInstanceOf(RuntimeException.class)

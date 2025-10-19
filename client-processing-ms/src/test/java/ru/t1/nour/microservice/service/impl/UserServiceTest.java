@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.t1.nour.microservice.model.Role;
@@ -22,7 +21,6 @@ import ru.t1.nour.microservice.repository.RoleRepository;
 import ru.t1.nour.microservice.repository.UserRepository;
 import ru.t1.nour.security.jwt.JwtUtils;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,7 +62,7 @@ public class UserServiceTest {
         String expectedJwt = "generated.jwt.token";
 
         // 2. Создаем "пользователя", которого якобы найдет UserDetailsService
-        Set<Role> authorities = Set.of(new Role(RoleEnum.USER_ROLE));
+        Set<Role> authorities = Set.of(new Role(RoleEnum.ROLE_CURRENT_CLIENT));
         UserDetails userDetails = new User(authRequest.getUsername(), "", authRequest.getPassword(), authorities);
 
         // 3. "Обучаем" моки

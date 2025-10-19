@@ -1,5 +1,6 @@
 package ru.t1.nour.microservice.service.impl;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import ru.t1.nour.microservice.repository.ClientProductRepository;
 import ru.t1.nour.microservice.repository.ClientRepository;
 import ru.t1.nour.microservice.repository.ProductRepository;
 import ru.t1.nour.microservice.service.ClientProductService;
+import ru.t1.nour.microservice.service.ProductService;
 import ru.t1.nour.microservice.service.impl.kafka.ProductEventProducer;
 
 import java.math.BigDecimal;
@@ -35,6 +37,11 @@ public class ClientProductServiceImpl implements ClientProductService {
     private final ProductEventProducer productEventProducer;
 
     private final ClientProductMapper mapper;
+
+    private final MeterRegistry meterRegistry;
+
+    private static final String PRODUCTS_OPENED_COUNTER = "products.opened.total";
+    private static final String PRODUCTS_CLOSED_COUNTER = "products.closed.total";
 
     @Override
     @Transactional
@@ -61,6 +68,10 @@ public class ClientProductServiceImpl implements ClientProductService {
         ClientProductEventDTO event = createEvent(savedProduct, request, "CREATED");
         productEventProducer.sendProductEvent(event);
 
+        String productType = savedProduct.getProduct().getProductKey().getValue();
+
+        meterRegistry.counter(PRODUCTS_OPENED_COUNTER, "product_type", productType).increment();
+
         return mapper.toClientProductResponse(savedProduct);
     }
 
@@ -83,6 +94,15 @@ public class ClientProductServiceImpl implements ClientProductService {
         ClientProduct clientProduct = clientProductRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Client Product with ID " + id + "is not exists."));
 
+        Status oldStatus = clientProduct.getStatus();
+        Status newStatus = request.getNewStatus();
+
+        if(oldStatus == Status.ACTIVE && newStatus == Status.CLOSED){
+            String productType = clientProduct.getProduct().getProductKey().getValue();
+
+            meterRegistry.counter(PRODUCTS_CLOSED_COUNTER, "product_type", productType).increment();
+        }
+
         clientProduct.setStatus(request.getNewStatus());
         clientProduct.setCloseDate(request.getCloseDate());
 
@@ -100,6 +120,10 @@ public class ClientProductServiceImpl implements ClientProductService {
         ClientProduct productToDelete = clientProductRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
+        String productType = productToDelete.getProduct().getProductKey().getValue();
+
+        meterRegistry.counter(PRODUCTS_CLOSED_COUNTER, "product_type", productType).increment();
+
         ClientProductEventDTO event = createEvent(productToDelete, null, "DELETED");
         productEventProducer.sendProductEvent(event);
 
@@ -111,7 +135,7 @@ public class ClientProductServiceImpl implements ClientProductService {
                 clientProduct.getId(),
                 clientProduct.getClient().getId(),
                 clientProduct.getProduct().getId(),
-                clientProduct.getProduct().getKey().getValue(),
+                clientProduct.getProduct().getProductKey().getValue(),
                 clientProduct.getStatus().name(),
                 request != null ? request.getRequestedAmount() : BigDecimal.valueOf(0.01),
                 request != null ? request.getMonthCount() : 1,
