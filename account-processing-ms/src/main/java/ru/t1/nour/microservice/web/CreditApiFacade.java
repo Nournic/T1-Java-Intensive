@@ -2,6 +2,7 @@ package ru.t1.nour.microservice.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -28,6 +29,10 @@ public class CreditApiFacade {
                                 Collections.emptyMap(), clientId.toString()
                         )))
                 .retrieve()
+                .onStatus(
+                        status -> status.value() == HttpStatus.NOT_FOUND.value(),
+                        response -> Mono.empty()
+                )
                 .bodyToMono(NextCreditPaymentDTO.class)
                 .blockOptional();
     }

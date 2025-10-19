@@ -44,10 +44,10 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
 
     @Value("app.antifraud.limit.count")
-    private final long ANTIFRAUD_LIMIT_COUNT;
+    private long ANTIFRAUD_LIMIT_COUNT;
 
     @Value("app.antifraud.limit.minutes")
-    private final long ANTIFRAUD_LIMIT_MINUTES;
+    private long ANTIFRAUD_LIMIT_MINUTES;
 
     @Transactional
     public void performTransaction(TransactionEventDTO event, UUID key){
